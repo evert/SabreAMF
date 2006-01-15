@@ -1,31 +1,16 @@
-<?
+<?php
 
-  header('Content-Type: text/plain');
+    include 'AMF/Server.php';
 
-  error_reporting(E_ALL | E_STRICT);
+    $server = new SabreAMF_Server(dirname(__FILE__) . '/dumps/');
+    $requests = $server->getRequests();
+   
+    foreach($requests as $request) {
 
-  require_once 'amf/Request.php';
-  require_once 'amf/Server.php';
+        $server->setResponse($request['response'],SabreAMF_Const::R_RESULT,$request['data']); 
 
+    }
 
-  $request = new SabreAMFRequest();
-  $request->unserialize(file_get_contents('test.amf'));
-
-  $server = new SabreAMFServer();
-  $server->request = $request;
-  $server->parseHeaders();
-
-  $response = $server->getResponse();
-
-  foreach($server->getRequest()->getCalls() as $call) {
-
-        $result = array(
-            'responseURI' => $call['response'],
-            'body'        => $call['target'],
-        );
-        $response->addResult($result);
-
-  }
-  $server->sendResponse();
+    $server->sendResponse();
 
 ?>
