@@ -1,5 +1,7 @@
 <?php
 
+    require_once dirname(__FILE__) . '/Const.php';
+
     class SabreAMF_Serializer {
 
         private $stream;

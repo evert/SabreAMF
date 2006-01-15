@@ -24,7 +24,7 @@
                 case SabreAMF_Const::AT_BOOL        : return $this->stream->readByte()==true;
                 case SabreAMF_Const::AT_STRING      : return $this->stream->readString();
                 case SabreAMF_Const::AT_OBJECT      : return $this->readObject();
-                //case self::AT_NULL        : return null; 
+                case SabreAMF_Const::AT_NULL        : return null; 
                 //case self::AT_UNDEFINED   : return null;
                 //case self::AT_REFERENCE   : return $this->readReference();
                 //case self::AT_MIXEDARRAY  : return $this->readMixedArray();

@@ -32,7 +32,7 @@
             foreach($this->bodies as $body) {
                 $serializer = new SabreAMF_Serializer($stream);
                 $stream->writeString($body['target']);
-                $stream->writeString("null");
+                $stream->writeString($body['response']);
                 $stream->writeLong(-1);
                 $serializer->writeAMFData($body['data']);
             }
@@ -42,6 +42,8 @@
         public function deserialize(SabreAMF_InputStream $stream) {
 
             $this->InputStream = $stream;
+
+            $stream->readByte();
           
             $this->clientType = $stream->readByte();
 

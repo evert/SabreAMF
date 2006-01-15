@@ -21,8 +21,7 @@
 
             $this->amfInputStream = new SabreAMF_InputStream($data);
 
-            $this->amfInputStream->readByte();
-            
+           
             $this->amfRequest = new SabreAMF_Message();
             $this->amfOutputStream = new SabreAMF_OutputStream();
             $this->amfResponse = new SabreAMF_Message();
