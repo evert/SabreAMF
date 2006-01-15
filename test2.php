@@ -1,16 +1,22 @@
 <?php
 
+
+    // Include the server class
     include 'AMF/Server.php';
 
-    $server = new SabreAMF_Server(dirname(__FILE__) . '/dumps/');
-    $requests = $server->getRequests();
-   
-    foreach($requests as $request) {
+    // Init server 
+    $server = new SabreAMF_Server();
+    
+    foreach($server->getRequests() as $request) {  // Loop through requests
 
-        $server->setResponse($request['response'],SabreAMF_Const::R_RESULT,$request['data']); 
+        $server->setResponse(  // Send a new response
+            $request['response'],  // Connect the request to the response
+            SabreAMF_Const::R_RESULT, // Either R_RESULT or R_STATUS
+            $request['data']  // Any data structure, in this case we are echoing back the original data
+        ); 
 
     }
 
-    $server->sendResponse();
+    $server->sendResponse(); //Send the responses back to the client
 
 ?>
