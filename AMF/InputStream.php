@@ -37,6 +37,7 @@
             return $int[1];
         }
 
+
         public function readLong() {
 
             $block = $this->readBuffer(4);
@@ -51,12 +52,20 @@
 
         }
 
+        public function readLongString() {
+
+            $strLen = $this->readLong();
+            return $this->readBuffer($strLen);
+
+        }
+
         public function readDouble() {
 
             $double = $this->readBuffer(8);
 
             $testEndian = unpack("C*",pack("S*",256));
-            $bigEndian = $testEndian[1]==1;
+            $bigEndian = !$testEndian[1]==1;
+                        
             if ($bigEndian) $double = strrev($double);
             $double = unpack("d",$double);
             return $double[1];

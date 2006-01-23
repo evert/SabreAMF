@@ -25,14 +25,14 @@
                 case SabreAMF_Const::AT_STRING      : return $this->stream->readString();
                 case SabreAMF_Const::AT_OBJECT      : return $this->readObject();
                 case SabreAMF_Const::AT_NULL        : return null; 
-                //case self::AT_UNDEFINED   : return null;
+                case SabreAMF_Const::AT_UNDEFINED   : return null;
                 //case self::AT_REFERENCE   : return $this->readReference();
-                //case self::AT_MIXEDARRAY  : return $this->readMixedArray();
+                case SabreAMF_Const::AT_MIXEDARRAY  : return $this->readMixedArray();
                 case SabreAMF_Const::AT_ARRAY       : return $this->readArray();
-                //case self::AT_DATE        : return $this->readDate();
-                //case self::AT_LONGSTRING  : return $this->stream->readLongString();
+                case SabreAMF_Const::AT_DATE        : return $this->readDate();
+                case SabreAMF_Const::AT_LONGSTRING  : return $this->stream->readLongString();
                 //case self::AT_UNSUPPORTED : return null;
-                //case self::AT_XML         : return $this->stream->readLongString();
+                case SabreAMF_Const::AT_XML         : return $this->stream->readLongString();
                 //case self::AT_NAMEDCLASS  : return $this->readNamedClass();
                 default                   :  throw new Exception('Unsupported type: 0x' . strtoupper(str_pad(dechex($settype),2,0,STR_PAD_LEFT))); return false;
  
@@ -62,6 +62,23 @@
 
         }
 
+        public function readMixedArray() {
+
+            $highestIndex = $this->stream->readLong();
+            return $this->readObject();
+
+        }
+
+        public function readDate() {
+
+            $timestamp = floor($this->stream->readDouble() / 1000);
+            $timezoneOffset = $this->stream->readInt();
+            if ($timezoneOffset > 720) $timezoneOffset = ((65536 - $timezoneOffset));
+            $timezoneOffset=($timezoneOffset * 60) - date('Z');
+            return $timestamp + ($timezoneOffset);
+
+
+        }
 
     }
 

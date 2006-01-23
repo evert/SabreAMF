@@ -16,6 +16,7 @@
 
            if (is_null($forcetype)) {
                 $type=false;
+                if (!$type && is_null($data))    $type = SabreAMF_Const::AT_NULL;
                 if (!$type && is_bool($data))    $type = SabreAMF_Const::AT_BOOL;
                 if (!$type && is_int($data))     $type = SabreAMF_Const::AT_NUMBER;
                 if (!$type && is_float($data))   $type = SabreAMF_Const::AT_NUMBER;
@@ -32,7 +33,7 @@
                 case SabreAMF_Const::AT_BOOL        : return $this->stream->writeByte($data==true);
                 case SabreAMF_Const::AT_STRING      : return $this->stream->writeString($data);
                 //case self::AT_OBJECT      : return $this->readObject();
-                //case self::AT_NULL        : return null; 
+                case SabreAMF_CONST::AT_NULL        : return true; 
                 //case self::AT_UNDEFINED   : return null;
                 //case self::AT_REFERENCE   : return $this->readReference();
                 case SabreAMF_Const::AT_MIXEDARRAY  : return $this->writeMixedArray($data);

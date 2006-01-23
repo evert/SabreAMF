@@ -27,7 +27,7 @@
 
             $bin = pack("d",$double);
             $testEndian = unpack("C*",pack("S*",256));
-            $bigEndian = $testEndian[1]==1;
+            $bigEndian = !$testEndian[1]==1;
             if ($bigEndian) $bin = strrev($bin);
             $this->rawData.=$bin;
 
