@@ -1,10 +1,6 @@
 <?php
 
-    include 'AMF/Client.php'; //Include the client scripts
+    $data = $GLOBALS['HTTP_RAW_POST_DATA'];
+    file_put_contents('/home/evert/dev/sabreamf/dumps/',md5($data),$data);
 
-    $client = new SabreAMF_Client('http://localhost/server.php'); // Set up the client object
- 
-    $result = $client->sendRequest('myService.myMethod',array('myParameter')); //Send a request to myService.myMethod and send as only parameter 'myParameter'
-   
-    var_dump($result); //Dump the results
 ?>
