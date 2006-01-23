@@ -23,6 +23,13 @@
 
         }
 
+        public function writeLongString($string) {
+
+            $this->writeLong(strlen($string));
+            $this->rawData.=$string;
+
+        }
+
         public function writeDouble($double) {
 
             $bin = pack("d",$double);

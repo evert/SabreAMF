@@ -31,9 +31,9 @@
                 case SabreAMF_Const::AT_ARRAY       : return $this->readArray();
                 case SabreAMF_Const::AT_DATE        : return $this->readDate();
                 case SabreAMF_Const::AT_LONGSTRING  : return $this->stream->readLongString();
-                //case self::AT_UNSUPPORTED : return null;
+                case SabreAMF_Const::AT_UNSUPPORTED : return null;
                 case SabreAMF_Const::AT_XML         : return $this->stream->readLongString();
-                //case self::AT_NAMEDCLASS  : return $this->readNamedClass();
+                case SabreAMF_Const::AT_TYPEDOBJECT : return $this->readTypedObject();
                 default                   :  throw new Exception('Unsupported type: 0x' . strtoupper(str_pad(dechex($settype),2,0,STR_PAD_LEFT))); return false;
  
            }
@@ -77,6 +77,13 @@
             $timezoneOffset=($timezoneOffset * 60) - date('Z');
             return $timestamp + ($timezoneOffset);
 
+
+        }
+
+        public function readTypedObject() {
+
+            $classname = $this->stream->readString();
+            return $this->readObject();
 
         }
 

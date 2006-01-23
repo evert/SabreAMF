@@ -24,7 +24,7 @@
         const AT_LONGSTRING  = 0x0C;
         const AT_UNSUPPORTED = 0x0E;
         const AT_XML         = 0x0F;
-        const AT_NAMEDCLASS  = 0x10;
+        const AT_TYPEDOBJECT = 0x10;
 
    }
 
