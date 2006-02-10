@@ -1,5 +1,7 @@
 <?php
 
+    /* $Id$ */
+
     require_once(dirname(__FILE__) . '/OutputStream.php');
     require_once(dirname(__FILE__) . '/InputStream.php');
     require_once(dirname(__FILE__) . '/Message.php');

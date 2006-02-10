@@ -1,8 +1,9 @@
 <?php
 
+    /* $Id$ */
 
     // Include the server class
-    include 'AMF/Server.php';
+    include 'SabreAMF/Server.php';
 
     // Init server 
     $server = new SabreAMF_Server();

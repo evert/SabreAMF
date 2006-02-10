@@ -1,5 +1,7 @@
 <?php
 
+    /* $Id$ */
+
     class SabreAMF_InputStream {
 
         private $cursor = 0;

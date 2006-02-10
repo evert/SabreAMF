@@ -1,5 +1,7 @@
 <?php
 
+    /* $Id$ */
+
     abstract class SabreAMF_Const {
 
         const AC_Flash    = 0;

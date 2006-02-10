@@ -1,5 +1,7 @@
 <?php
 
+    /* $Id$ */
+
     class SabreAMF_OutputStream {
 
         private $rawData = '';
