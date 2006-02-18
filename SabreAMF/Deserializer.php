@@ -2,18 +2,54 @@
 
     /* $Id$ */
 
+    /**
+     * SabreAMF_Deserializer 
+     * 
+     * @package SabreAMF 
+     * @version $Id$
+     * @copyright 2006 Rooftop Solutions
+     * @author Evert Pot <evert@collab.nl> 
+     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
+     */
     class SabreAMF_Deserializer {
 
+        /**
+         * stream 
+         * 
+         * @var SabreAMF_InputStream
+         */
         private $stream;
+        /**
+         * objectcount 
+         * 
+         * @var int
+         */
         private $objectcount;
+        /**
+         * refList 
+         * 
+         * @var array 
+         */
         private $refList;
 
+        /**
+         * __construct 
+         * 
+         * @param SabreAMF_InputStream $stream 
+         * @return void
+         */
         public function __construct(SabreAMF_InputStream $stream) {
 
             $this->stream = $stream;
 
         }
 
+        /**
+         * readAMFData 
+         * 
+         * @param mixed $settype 
+         * @return mixed 
+         */
         public function readAMFData($settype = null) {
 
            if (is_null($settype)) {
@@ -42,6 +78,11 @@
 
         }
 
+        /**
+         * readObject 
+         * 
+         * @return object 
+         */
         public function readObject() {
 
             $object = array();
@@ -55,6 +96,11 @@
 
         }
 
+        /**
+         * readArray 
+         * 
+         * @return array 
+         */
         public function readArray() {
 
             $length = $this->stream->readLong();
@@ -64,6 +110,11 @@
 
         }
 
+        /**
+         * readMixedArray 
+         * 
+         * @return array 
+         */
         public function readMixedArray() {
 
             $highestIndex = $this->stream->readLong();
@@ -71,6 +122,11 @@
 
         }
 
+        /**
+         * readDate 
+         * 
+         * @return int 
+         */
         public function readDate() {
 
             $timestamp = floor($this->stream->readDouble() / 1000);
@@ -82,6 +138,11 @@
 
         }
 
+        /**
+         * readTypedObject 
+         * 
+         * @return object
+         */
         public function readTypedObject() {
 
             $classname = $this->stream->readString();

@@ -1,19 +1,60 @@
 <?php
 
-    /* $Id$ */
-
     require_once(dirname(__FILE__) . '/Message.php');
     require_once(dirname(__FILE__) . '/OutputStream.php');
     require_once(dirname(__FILE__) . '/InputStream.php');
  
+    /**
+     * Client
+     *
+     * PHP Version 5
+     * 
+     * @package SabreAMF
+     * @version $Id$
+     * @copyright 2006 Rooftop Solutions
+     * @author Evert Pot <evert@collab.nl> 
+     * @licence http://www.freebsd.org/copyright/license.html  BSD License
+     * @link http://www.osflash.org/sabreamf
+     */
     class SabreAMF_Client {
 
+        /**
+         * endPoint 
+         * 
+         * @var mixed
+         */
         private $endPoint; 
+        /**
+         * amfInputStream 
+         * 
+         * @var mixed
+         */
         private $amfInputStream;
+        /**
+         * amfOutputStream 
+         * 
+         * @var mixed
+         */
         private $amfOutputStream;
+        /**
+         * amfRequest 
+         * 
+         * @var mixed
+         */
         private $amfRequest;
+        /**
+         * amfResponse 
+         * 
+         * @var mixed
+         */
         private $amfResponse;
 
+        /**
+         * __construct 
+         * 
+         * @param mixed $endPoint 
+         * @return void
+         */
         public function __construct($endPoint) {
 
             $this->endPoint = $endPoint;
@@ -24,6 +65,13 @@
         }
 
 
+        /**
+         * sendRequest 
+         * 
+         * @param mixed $servicePath 
+         * @param mixed $data 
+         * @return void
+         */
         function sendRequest($servicePath,$data) {
 
             $ch = curl_init($this->endPoint);
