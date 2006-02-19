@@ -1,19 +1,44 @@
 <?php
 
-    /* $Id$ */
-
     require_once dirname(__FILE__) . '/Const.php';
 
+    /**
+     * SabreAMF_Serializer 
+     * 
+     * @package SabreAMF 
+     * @version $Id$
+     * @copyright 2006 Rooftop Solutions
+     * @author Evert Pot <evert@collab.nl> 
+     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
+     */
     class SabreAMF_Serializer {
 
+        /**
+         * stream 
+         * 
+         * @var SabreAMF_OutputStream 
+         */
         private $stream;
 
+        /**
+         * __construct 
+         * 
+         * @param SabreAMF_OutputStream $stream 
+         * @return void
+         */
         public function __construct(SabreAMF_OutputStream $stream) {
 
             $this->stream = $stream;
 
         }
 
+        /**
+         * writeAMFData 
+         * 
+         * @param mixed $data 
+         * @param int $forcetype 
+         * @return mixed 
+         */
         public function writeAMFData($data,$forcetype=null) {
 
            if (is_null($forcetype)) {
@@ -50,6 +75,12 @@
 
         }
 
+        /**
+         * writeMixedArray 
+         * 
+         * @param array $data 
+         * @return void
+         */
         public function writeMixedArray($data) {
 
             $this->stream->writeLong(0);
@@ -62,6 +93,12 @@
 
         }
 
+        /**
+         * writeObject 
+         * 
+         * @param object $data 
+         * @return void
+         */
         public function writeObject($data) {
 
             foreach($data as $key=>$value) {
@@ -74,6 +111,12 @@
 
         }
 
+        /**
+         * writeTypedObject 
+         * 
+         * @param SabreAMF_TypedObject $data 
+         * @return void
+         */
         public function writeTypedObject($data) {
 
             $this->stream->writeString($data->getAMFClassName());

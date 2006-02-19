@@ -1,19 +1,48 @@
 <?php
 
-    /* $Id$ */
-
+    /**
+     * SabreAMF_InputStream 
+     * 
+     * @package SabreAMF 
+     * @version $Id$
+     * @copyright 2006 Rooftop Solutions
+     * @author Evert Pot <evert@collab.nl> 
+     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
+     */
     class SabreAMF_InputStream {
 
+        /**
+         * cursor 
+         * 
+         * @var int 
+         */
         private $cursor = 0;
+        /**
+         * rawData 
+         * 
+         * @var string
+         */
         private $rawData = '';
 
 
+        /**
+         * __construct 
+         * 
+         * @param string $data 
+         * @return void
+         */
         public function __construct($data) {
 
             $this->rawData = $data;
 
         }
 
+        /**
+         * &readBuffer 
+         * 
+         * @param int $length 
+         * @return mixed 
+         */
         private function &readBuffer($length) {
 
             if ($length+$this->cursor > strlen($this->rawData)) {
@@ -26,12 +55,22 @@
 
         }
 
+        /**
+         * readByte 
+         * 
+         * @return int 
+         */
         public function readByte() {
 
             return ord($this->readBuffer(1));
 
         }
 
+        /**
+         * readInt 
+         * 
+         * @return int 
+         */
         public function readInt() {
 
             $block = $this->readBuffer(2);
@@ -40,6 +79,12 @@
         }
 
 
+        /**
+         * readLong 
+         * 
+         * @return int 
+         */
+
         public function readLong() {
 
             $block = $this->readBuffer(4);
@@ -47,6 +92,11 @@
             return $long[1];
         }
 
+        /**
+         * readString 
+         * 
+         * @return string 
+         */
         public function readString() {
 
             $strLen = $this->readInt();
@@ -54,6 +104,11 @@
 
         }
 
+        /**
+         * readLongString 
+         * 
+         * @return string 
+         */
         public function readLongString() {
 
             $strLen = $this->readLong();
@@ -61,6 +116,11 @@
 
         }
 
+        /**
+         * readDouble 
+         * 
+         * @return float 
+         */
         public function readDouble() {
 
             $double = $this->readBuffer(8);
