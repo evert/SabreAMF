@@ -9,7 +9,7 @@
      * @author Evert Pot <evert@collab.nl> 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
-    class SabreAMF_AMF3_Deserializer {
+    class SabreAMF_Deserializer {
 
         /**
          * stream 
@@ -56,7 +56,6 @@
 
            switch ($settype) {
 
-/*
                 case SabreAMF_Const::AT_NUMBER      : return $this->stream->readDouble();
                 case SabreAMF_Const::AT_BOOL        : return $this->stream->readByte()==true;
                 case SabreAMF_Const::AT_STRING      : return $this->stream->readString();
@@ -64,19 +63,15 @@
                 case SabreAMF_Const::AT_NULL        : return null; 
                 case SabreAMF_Const::AT_UNDEFINED   : return null;
                 //case self::AT_REFERENCE   : return $this->readReference();
-*/                
-                case SabreAMF_Const::AT_AMF3_OBJECT : return $this->readObject();
-/*
+                case SabreAMF_Const::AT_MIXEDARRAY  : return $this->readMixedArray();
                 case SabreAMF_Const::AT_ARRAY       : return $this->readArray();
                 case SabreAMF_Const::AT_DATE        : return $this->readDate();
                 case SabreAMF_Const::AT_LONGSTRING  : return $this->stream->readLongString();
                 case SabreAMF_Const::AT_UNSUPPORTED : return null;
                 case SabreAMF_Const::AT_XML         : return $this->stream->readLongString();
                 case SabreAMF_Const::AT_TYPEDOBJECT : return $this->readTypedObject();
-*/                
                 default                   :  throw new Exception('Unsupported type: 0x' . strtoupper(str_pad(dechex($settype),2,0,STR_PAD_LEFT))); return false;
-
-
+ 
            }
 
         }
@@ -92,7 +87,7 @@
             while (true) {
                 $key = $this->stream->readString();
                 $vartype = $this->stream->readByte();
-                if ($vartype==SabreAMF_Const::AT_AMF0_OBJECTTERM) break;
+                if ($vartype==SabreAMF_Const::AT_OBJECTTERM) break;
                 $object[$key] = $this->readAmfData($vartype);
             }
             return $object;    
