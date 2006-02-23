@@ -43,7 +43,7 @@
          * @param int $length 
          * @return mixed 
          */
-        private function &readBuffer($length) {
+        public function &readBuffer($length) {
 
             if ($length+$this->cursor > strlen($this->rawData)) {
                 throw new Exception('Buffer underrun at position: '. $this->cursor . '. Trying to fetch '. $length . ' bytes');
@@ -64,18 +64,6 @@
 
             return ord($this->readBuffer(1));
 
-        }
-
-        /**
-         * readInt 
-         * 
-         * @return int 
-         */
-        public function readInt() {
-
-            $block = $this->readBuffer(2);
-            $int = unpack("n",$block);
-            return $int[1];
         }
 
 
@@ -114,23 +102,6 @@
             $strLen = $this->readLong();
             return $this->readBuffer($strLen);
 
-        }
-
-        /**
-         * readDouble 
-         * 
-         * @return float 
-         */
-        public function readDouble() {
-
-            $double = $this->readBuffer(8);
-
-            $testEndian = unpack("C*",pack("S*",256));
-            $bigEndian = !$testEndian[1]==1;
-                        
-            if ($bigEndian) $double = strrev($double);
-            $double = unpack("d",$double);
-            return $double[1];
         }
 
     }

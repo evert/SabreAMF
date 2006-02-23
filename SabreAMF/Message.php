@@ -1,7 +1,7 @@
 <?php
 
     require_once dirname(__FILE__) . '/AMF0/Deserializer.php'; 
-    //require_once dirname(__FILE__) . '/AMF3/Deserializer.php';
+    require_once dirname(__FILE__) . '/AMF3/Deserializer.php';
 
     require_once dirname(__FILE__) . '/Serializer.php'; 
 
@@ -95,13 +95,13 @@
           
             $this->clientType = $stream->readByte();
 
-            $totalHeaders = $stream->readInt();
-
             if ($this->clientType>=3) {
                 $deserializer = new SabreAMF_AMF3_Deserializer($stream);
             } else {
                 $deserializer = new SabreAMF_AMF0_Deserializer($stream);
             }
+
+            $totalHeaders = $deserializer->readInt();
 
             for($i=0;$i<$totalHeaders;$i++) {
 
@@ -116,7 +116,7 @@
             }
 
     
-            $totalBodies = $stream->readInt();
+            $totalBodies = $deserializer->readInt();
 
             for($i=0;$i<$totalBodies;$i++) {
 
