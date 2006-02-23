@@ -9,7 +9,7 @@
      * @author Evert Pot <evert@collab.nl> 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
-    class SabreAMF_Deserializer {
+    class SabreAMF_AMF0_Deserializer {
 
         /**
          * stream 
