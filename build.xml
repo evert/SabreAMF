@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project name="SabreAMF" default="dist" basedir=".">
+
+    <property name="BUILDDIR" value="build/" />
+    <svnlastrevision workingcopy="." propertyname="svn.lastrevision"/>
+
+    <target name="prepare">
+        <echo msg="Preparing build.." />
+        <mkdir dir="${BUILDDIR}" />
+        <copy file="LICENCE" todir="${BUILDDIR}" />
+    </target>
+
+    <target name="build" depends="prepare">
+         <echo msg="Copying source files" />
+         <mkdir dir="${BUILDDIR}/SabreAMF" />
+         <copy todir="${BUILDDIR}/SabreAMF">
+            <fileset dir="SabreAMF/">
+                <include name="*.php" />
+                <include name="AMF0/*.php" />
+                <include name="AMF3/*.php" />
+            </fileset>    
+        </copy>
+    </target>
+
+    <target name="buildexamples" depends="prepare">
+        <echo msg="Copying examples" />
+        <mkdir dir="${BUILDDIR}/examples" />
+        <copy todir="${BUILDDIR}/examples">
+            <fileset dir="examples/">
+                <include name="*.php" />
+            </fileset>
+        </copy>    
+    </target>
+
+    <target name="textfiles" depends="prepare">
+        <echo msg="Copying textfiles" />
+        <copy todir="${BUILDDIR}" file="README" />
+    </target>    
+
+    <target name="package" depends="build">
+        <echo msg="packaging" />
+        <tar destfile="${BUILDDIR}/sabreamf-r${svn.lastrevision}.tar.gz" compression="gzip" basedir="${BUILDDIR}" />
+    </target>
+
+    <target name="dist" depends="build, buildexamples, textfiles, package">
+        <echo msg="Creating full featured SabreAMF package" />
+    </target>    
+
+</project>
