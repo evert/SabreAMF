@@ -53,12 +53,12 @@
 
                 case SabreAMF_AMF0_Const::DT_NUMBER      : return $this->stream->writeDouble($data);
                 case SabreAMF_AMF0_Const::DT_BOOL        : return $this->stream->writeByte($data==true);
-                case SabreAMF_AMF0_Const::DT_STRING      : return $this->stream->writeString($data);
+                case SabreAMF_AMF0_Const::DT_STRING      : return $this->writeString($data);
                 case SabreAMF_AMF0_Const::DT_OBJECT      : return $this->writeObject($data);
                 case SabreAMF_AMF0_Const::DT_NULL        : return true; 
                 //case self::AT_REFERENCE   : return $this->readReference();
                 case SabreAMF_AMF0_Const::DT_MIXEDARRAY  : return $this->writeMixedArray($data);
-                case SabreAMF_AMF0_Const::DT_LONGSTRING  : return $this->stream->writeLongString();
+                case SabreAMF_AMF0_Const::DT_LONGSTRING  : return $this->writeLongString();
                 case SabreAMF_AMF0_Const::DT_TYPEDOBJECT : return $this->writeTypedObject($data);
                 case SabreAMF_AMF0_Const::DT_AMF3        : return $this->writeAMF3Data($data);
                 default                   :  throw new Exception('Unsupported type: ' . gettype($data)); return false;
@@ -77,10 +77,10 @@
 
             $this->stream->writeLong(0);
             foreach($data as $key=>$value) {
-                $this->stream->writeString($key);
+                $this->writeString($key);
                 $this->writeAMFData($value);
             }
-            $this->stream->writeString('');
+            $this->writeString('');
             $this->stream->writeByte(SabreAMF_AMF0_Const::DT_OBJECTTERM);
 
         }
@@ -94,16 +94,41 @@
         public function writeObject($data) {
 
             foreach($data as $key=>$value) {
-                $this->stream->writeString($key);
+                $this->writeString($key);
                 $this->writeAmfData($value);
             }
-            $this->stream->writeString('');
+            $this->writeString('');
             $this->stream->writeByte(SabreAMF_AMF0_Const::DT_OBJECTTERM);
             return true;
 
         }
 
         /**
+         * writeString 
+         * 
+         * @param string $string 
+         * @return void
+         */
+        public function writeString($string) {
+
+            $this->stream->writeInt(strlen($string));
+            $this->stream->writeBuffer($string);
+
+        }
+
+        /**
+         * writeLongString 
+         * 
+         * @param string $string 
+         * @return void
+         */
+        public function writeLongString($string) {
+
+            $this->stream->writeLong(strlen($string));
+            $this->stream->writeBuffer($string);
+
+        }
+       /**
          * writeTypedObject 
          * 
          * @param SabreAMF_ITypedObject $data 
@@ -111,7 +136,7 @@
          */
         public function writeTypedObject(SabreAMF_ITypedObject $data) {
 
-            $this->stream->writeString($data->getAMFClassName());
+            $this->writeString($data->getAMFClassName());
             return $this->writeObject($data->getAMFData());
 
         }

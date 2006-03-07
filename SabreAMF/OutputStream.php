@@ -53,32 +53,6 @@
         }
         
         /**
-         * writeString 
-         * 
-         * @param string $string 
-         * @return void
-         */
-        public function writeString($string) {
-
-            $this->writeInt(strlen($string));
-            $this->rawData.=$string;
-
-        }
-
-        /**
-         * writeLongString 
-         * 
-         * @param string $string 
-         * @return void
-         */
-        public function writeLongString($string) {
-
-            $this->writeLong(strlen($string));
-            $this->rawData.=$string;
-
-        }
-
-        /**
          * writeDouble 
          * 
          * @param float $double 
