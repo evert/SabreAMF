@@ -113,31 +113,6 @@
             $long = unpack("N",$block);
             return $long[1];
         }
-
-        /**
-         * readString 
-         * 
-         * @return string 
-         */
-        public function readString() {
-
-            $strLen = $this->readInt();
-            return $this->readBuffer($strLen);
-
-        }
-
-        /**
-         * readLongString 
-         * 
-         * @return string 
-         */
-        public function readLongString() {
-
-            $strLen = $this->readLong();
-            return $this->readBuffer($strLen);
-
-        }
-
        
     }
 
