@@ -1,7 +1,8 @@
 <?php
 
-    require_once dirname(__FILE__) . '/Deserializer.php'; 
-    require_once dirname(__FILE__) . '/Serializer.php'; 
+    require_once dirname(__FILE__) . '/AMF0/Serializer.php'; 
+    require_once dirname(__FILE__) . '/AMF0/Deserializer.php'; 
+
 
     /**
      * SabreAMF_Message 
@@ -60,17 +61,17 @@
             
             foreach($this->headers as $header) {
 
-                $serializer = new SabreAMF_Serializer($stream);
+                $serializer = new SabreAMF_AMF0_Serializer($stream);
                 
                 $stream->writeString($header['name']);
-                $stream->writeByte($header['required']);
+                $stream->writeByte($header['required']==true);
                 $stream->writeLong(-1);
-                $seralizer->writeAMFData($header['data']);
+                $serializer->writeAMFData($header['data']);
             }
             $stream->writeInt(count($this->bodies));
 
             foreach($this->bodies as $body) {
-                $serializer = new SabreAMF_Serializer($stream);
+                $serializer = new SabreAMF_AMF0_Serializer($stream);
                 $stream->writeString($body['target']);
                 $stream->writeString($body['response']);
                 $stream->writeLong(-1);
@@ -87,17 +88,21 @@
          */
         public function deserialize(SabreAMF_InputStream $stream) {
 
+            $this->headers = array();
+            $this->bodies = array();
+
             $this->InputStream = $stream;
 
             $stream->readByte();
           
             $this->clientType = $stream->readByte();
 
+            $deserializer = new SabreAMF_AMF0_Deserializer($stream);
+
             $totalHeaders = $stream->readInt();
 
             for($i=0;$i<$totalHeaders;$i++) {
 
-                $deserializer = new SabreAMF_Deserializer($stream);
                 $header = array(
                     'name'     => $stream->readString(),
                     'required' => $stream->readByte()==true
@@ -107,20 +112,19 @@
                 $this->headers[] = $header;    
 
             }
-
-    
+ 
             $totalBodies = $stream->readInt();
 
             for($i=0;$i<$totalBodies;$i++) {
 
-                $deserializer = new SabreAMF_Deserializer($stream);
 
                 $body = array(
                     'target'   => $stream->readString(),
                     'response' => $stream->readString(),
                     'length'   => $stream->readLong(),
                     'data'     => $deserializer->readAMFData()
-                );  
+                );
+                
                 $this->bodies[] = $body;    
 
             }
@@ -147,6 +151,17 @@
         public function getBodies() {
 
             return $this->bodies;
+
+        }
+
+        /**
+         * getHeaders 
+         * 
+         * @return array 
+         */
+        public function getHeaders() {
+
+            return $this->headers;
 
         }
 

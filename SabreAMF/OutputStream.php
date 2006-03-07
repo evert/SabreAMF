@@ -19,6 +19,16 @@
         private $rawData = '';
 
         /**
+         * writeBuffer 
+         * 
+         * @param string $str 
+         * @return void
+         */
+        public function writeBuffer($str) {
+            $this->rawData.=$str;
+        }
+
+        /**
          * writeByte 
          * 
          * @param int $byte 
