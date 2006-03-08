@@ -4,6 +4,14 @@
     <property name="BUILDDIR" value="build/" />
     <svnlastrevision workingcopy="." propertyname="svn.lastrevision"/>
 
+    <fileset dir="${BUILDDIR}" id="pkgfiles">
+        <include name="*.php" />
+        <include name="**/*.php" />
+        <include name="README" />
+        <include name="LICENCE" />
+    </fileset>    
+        
+
     <target name="prepare">
         <echo msg="Preparing build.." />
         <mkdir dir="${BUILDDIR}" />
@@ -42,7 +50,38 @@
         <tar destfile="${BUILDDIR}/sabreamf-r${svn.lastrevision}.tar.gz" compression="gzip" basedir="${BUILDDIR}" />
     </target>
 
-    <target name="dist" depends="build, buildexamples, textfiles, package">
+    <target name="pearpkg">
+        <pearpkg name="SabreAMF" dir="${BUILDDIR}" destFile="${BUILDDIR}/package.xml">
+            <fileset refid="pkgfiles" />
+            <option name="notes">This is a alpha-prerelease</option>
+            <option name="description">SabreAMF is a Flash Remoting server/client. SabreAMF supports both the AMF0 and AMF3 protocols</option>
+            <option name="summary">SabreAMF is a Flash Remoting server/client, supporting AMF0 and AMF3 protocols</option>
+            <option name="version" value="0.1.${svn.lastrevision}" />
+            <option name="state" value="alpha" />
+            <option name="licence" value="BSD" />
+            <mapping name="maintainers">
+                <element>
+                    <element key="handle" value="evert" />
+                    <element key="name" value="Evert Pot" />
+                    <element key="email" value="evert@collab.nl" />
+                    <element key="role" value="lead" />
+                </element>
+             </mapping>
+             <mapping name="deps">
+                <element>
+                    <element key="type" value="php" />
+                    <element key="version" value="5.0.4" />
+                    <element key="rel" value="ge" />
+                </element>
+             </mapping>
+             <mapping name="exceptions">
+                <element key="README" value="doc" />
+                <element key="LICENCE" value="doc" />
+             </mapping>   
+         </pearpkg> 
+    </target>
+
+    <target name="dist" depends="build, buildexamples, textfiles, pearpkg, package">
         <echo msg="Creating full featured SabreAMF package" />
     </target>    
 
