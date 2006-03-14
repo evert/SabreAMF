@@ -20,25 +20,22 @@
     class SabreAMF_AMF0_Deserializer extends SabreAMF_Deserializer {
 
         /**
-         * objectcount 
-         * 
-         * @var int
-         */
-        private $objectcount;
-        /**
          * refList 
          * 
          * @var array 
          */
-        private $refList;
+        private $refList = array();
 
         /**
          * readAMFData 
          * 
-         * @param mixed $settype 
+         * @param int $settype 
+         * @param bool $newscope
          * @return mixed 
          */
-        public function readAMFData($settype = null) {
+        public function readAMFData($settype = null,$newscope = false) {
+
+           if ($newscope) $this->refList = array();
 
            if (is_null($settype)) {
                 $settype = $this->stream->readByte();
@@ -52,7 +49,7 @@
                 case SabreAMF_AMF0_Const::DT_OBJECT      : return $this->readObject();
                 case SabreAMF_AMF0_Const::DT_NULL        : return null; 
                 case SabreAMF_AMF0_Const::DT_UNDEFINED   : return null;
-                //case self::AT_REFERENCE   : return $this->readReference();
+                case SabreAMF_AMF0_Const::DT_REFERENCE   : return $this->readReference();
                 case SabreAMF_AMF0_Const::DT_MIXEDARRAY  : return $this->readMixedArray();
                 case SabreAMF_AMF0_Const::DT_ARRAY       : return $this->readArray();
                 case SabreAMF_AMF0_Const::DT_DATE        : return $this->readDate();
@@ -81,9 +78,29 @@
                 if ($vartype==SabreAMF_AMF0_Const::DT_OBJECTTERM) break;
                 $object[$key] = $this->readAmfData($vartype);
             }
-            return (object)$object;    
+            $object = (object)$object;
+            $this->refList[] = $object;
+            return $object;    
 
         }
+
+        /**
+         * readReference 
+         * 
+         * @return object 
+         */
+        public function readReference() {
+            
+            $refId = $this->stream->readInt();
+            if (isset($this->refList[$refId])) {
+                return $this->refList[$refId];
+            } else {
+                throw new Exception('Invalid reference offset: ' . $refId);
+                return false;
+            }
+
+        }
+
 
         /**
          * readArray 
@@ -159,7 +176,17 @@
          */
         public function readTypedObject() {
 
-            return new SabreAMF_TypedObject($this->readString(),$this->readObject());
+            $classname = $this->readString();
+            $object = array();
+            while (true) {
+                $key = $this->readString();
+                $vartype = $this->stream->readByte();
+                if ($vartype==SabreAMF_AMF0_Const::DT_OBJECTTERM) break;
+                $object[$key] = $this->readAmfData($vartype);
+            }
+            $object = new SabreAMF_TypedObject($classname,(object)$object);
+            $this->refList[] = $object;
+            return $object;
 
         }
         
