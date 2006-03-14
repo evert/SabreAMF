@@ -128,6 +128,22 @@
 
         }
 
+        /**
+         * addHeader 
+         *
+         * Add a header to the server response
+         * 
+         * @param string $name 
+         * @param bool $required 
+         * @param mixed $data 
+         * @return void
+         */
+        public function addHeader($name,$required,$data) {
+
+            $this->amfResponse->addHeader(array('name'=>$name,'required'=>$required==true,'data'=>$data));
+
+        }
+ 
     }
 
 ?>
