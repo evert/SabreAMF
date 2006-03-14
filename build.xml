@@ -95,7 +95,7 @@
         <delete dir="apidocs" />
     </target>    
 
-    <target name="publishsnapshot" depends="clean dist">
+    <target name="publishsnapshot" depends="clean, dist">
         <copy file="${BUILDDIR}/sabreamf-r${svn.lastrevision}.tar.gz" todir="/home/www/download.collab.nl/products/sabreamf/snapshots/" /> 
     </target>
 
