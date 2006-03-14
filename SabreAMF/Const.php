@@ -11,7 +11,7 @@
      * @author Evert Pot <evert@collab.nl> 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
-    abstract class SabreAMF_Const {
+    final class SabreAMF_Const {
 
         /**
          * AC_Flash
