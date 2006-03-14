@@ -85,7 +85,7 @@
         <phpdoc title="SabreAMF API Documentation" destdir="build/apidocs" sourcepath="SabreAMF/" output="HTML:frames:default" />
     </target>
 
-    <target name="dist" depends="build, buildexamples, textfiles, pearpkg, package">
+    <target name="dist" depends="build, buildexamples, textfiles, package">
         <echo msg="Creating full featured SabreAMF package" />
     </target>    
 
@@ -94,5 +94,9 @@
         <delete dir="build/" />
         <delete dir="apidocs" />
     </target>    
+
+    <target name="publishsnapshot" depends="clean dist">
+        <copy file="${BUILDDIR}/sabreamf-r${svn.lastrevision}.tar.gz" todir="/home/www/download.collab.nl/products/sabreamf/snapshots/" /> 
+    </target>
 
 </project>
