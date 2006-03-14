@@ -5,9 +5,9 @@
     require_once(dirname(__FILE__) . '/InputStream.php');
  
     /**
-     * Client
+     * AMF Client
      *
-     * PHP Version 5
+     * Use this class to make a call to an AMF0/AMF3 Server 
      * 
      * @package SabreAMF
      * @version $Id$
@@ -15,6 +15,7 @@
      * @author Evert Pot <evert@collab.nl> 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License
      * @link http://www.osflash.org/sabreamf
+     * @example ../examples/client.php
      */
     class SabreAMF_Client {
 
@@ -52,7 +53,7 @@
         /**
          * __construct 
          * 
-         * @param mixed $endPoint 
+         * @param mixed $endPoint The url to the AMF gateway
          * @return void
          */
         public function __construct($endPoint) {
@@ -67,10 +68,12 @@
 
         /**
          * sendRequest 
+         *
+         * sendRequest sends the request to the server. It expects the servicepath and methodname, and the parameters of the methodcall
          * 
-         * @param mixed $servicePath 
-         * @param mixed $data 
-         * @return void
+         * @param mixed $servicePath The servicepath (e.g.: myservice.mymethod)
+         * @param mixed $data The parameters you want to send
+         * @return mixed 
          */
         function sendRequest($servicePath,$data) {
 

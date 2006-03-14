@@ -7,7 +7,9 @@
 
 
     /**
-     * SabreAMF_Server 
+     * AMF Server
+     * 
+     * This is the AMF0/AMF3 Server class. Use this class to construct a gateway for clients to connect to 
      * 
      * @package SabreAMF 
      * @version $Id$
@@ -67,6 +69,8 @@
         /**
          * getRequests 
          * 
+         * Returns the requests that are made to the gateway.
+         * 
          * @return array 
          */
         public function getRequests() {
@@ -78,9 +82,11 @@
         /**
          * setResponse 
          * 
-         * @param string $target 
-         * @param int $responsetype 
-         * @param mixed $data 
+         * Send a response back to the client (based on a request you got through getRequests)
+         * 
+         * @param string $target This parameter should contain the same as the 'response' item you got through getRequests. This connects the request to the response
+         * @param int $responsetype Set as either SabreAMF_Const::R_RESULT or SabreAMF_Const::R_STATUS, depending on if the call succeeded or an error was produced
+         * @param mixed $data The result data
          * @return void
          */
         public function setResponse($target,$responsetype,$data) {
@@ -104,6 +110,8 @@
 
         /**
          * sendResponse 
+         *
+         * Sends the responses back to the client. Call this after you answered all the requests with setResponse
          * 
          * @return void
          */

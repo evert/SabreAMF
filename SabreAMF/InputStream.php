@@ -3,6 +3,8 @@
     /**
      * SabreAMF_InputStream 
      * 
+     * This is the InputStream class. You construct it with binary data and it can read doubles, longs, ints, bytes, etc. while maintaining the cursor position
+     * 
      * @package SabreAMF 
      * @version $Id$
      * @copyright 2006 Rooftop Solutions

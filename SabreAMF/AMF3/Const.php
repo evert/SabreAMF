@@ -1,15 +1,16 @@
 <?php
 
     /**
-     * SabreAMF_Const 
+     * SabreAMF_AMF3_Const 
      * 
-     * @package SabreAMF 
+     * @package SabreAMF
+     * @subpackage AMF3
      * @version $Id$
      * @copyright 2006 Rooftop Solutions
      * @author Evert Pot <evert@collab.nl> 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
-    abstract class SabreAMF_AMF3_Const {
+    final class SabreAMF_AMF3_Const {
 
         const DT_NULL        = 0x01;
         const DT_BOOL_FALSE  = 0x02;

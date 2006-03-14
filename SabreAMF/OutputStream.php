@@ -2,6 +2,8 @@
 
     /**
      * SabreAMF_OutputStream 
+     *
+     * This class provides methods to encode bytes, longs, strings, int's etc. to a binary format
      * 
      * @package SabreAMF 
      * @version $Id$

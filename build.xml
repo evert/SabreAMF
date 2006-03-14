@@ -81,8 +81,18 @@
          </pearpkg> 
     </target>
 
+    <target name="documentation" depends="prepare">
+        <phpdoc title="SabreAMF API Documentation" destdir="build/apidocs" sourcepath="SabreAMF/" output="HTML:frames:default" />
+    </target>
+
     <target name="dist" depends="build, buildexamples, textfiles, pearpkg, package">
         <echo msg="Creating full featured SabreAMF package" />
+    </target>    
+
+    <target name="clean">
+        <echo msg="Removing build files (cleaning up distribution)" />
+        <delete dir="build/" />
+        <delete dir="apidocs" />
     </target>    
 
 </project>

@@ -7,6 +7,8 @@
     /**
      * SabreAMF_Message 
      * 
+     * The Message class encapsulates either an entire request package or an entire result package; including an AMF enveloppe
+     * 
      * @package SabreAMF 
      * @version $Id$
      * @copyright 2006 Rooftop Solutions
@@ -49,6 +51,9 @@
         /**
          * serialize 
          * 
+         * This method serializes a request. It requires an SabreAMF_OutputStream as an argument to read
+         * the AMF Data from. After serialization the Outputstream will contain the encoded AMF data.
+         * 
          * @param SabreAMF_OutputStream $stream 
          * @return void
          */
@@ -83,6 +88,9 @@
         /**
          * deserialize 
          * 
+         * This method deserializes a request. It requires an SabreAMF_InputStream with valid AMF data. After
+         * deserialization the contents of the request can be found through the getBodies and getHeaders methods
+         *
          * @param SabreAMF_InputStream $stream 
          * @return void
          */
@@ -135,6 +143,8 @@
         /**
          * getClientType 
          * 
+         * Returns the ClientType for the request. Check SabreAMF_Const for possible (known) values
+         * 
          * @return int 
          */
         public function getClientType() {
@@ -145,6 +155,8 @@
 
         /**
          * getBodies 
+         * 
+         * Returns the bodies int the message
          * 
          * @return array 
          */
@@ -157,6 +169,8 @@
         /**
          * getHeaders 
          * 
+         * Returns the headers in the message
+         * 
          * @return array 
          */
         public function getHeaders() {
@@ -167,6 +181,8 @@
 
         /**
          * addBody 
+         *
+         * Adds a body to the message
          * 
          * @param mixed $body 
          * @return void 

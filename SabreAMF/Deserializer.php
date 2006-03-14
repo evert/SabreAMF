@@ -4,6 +4,8 @@
     /**
      * SabreAMF_Deserializer 
      * 
+     * This is the abstract Deserializer. The AMF0 and AMF3 classes descent from this class
+     * 
      * @package SabreAMF 
      * @version $Id$
      * @copyright 2006 Rooftop Solutions
@@ -21,7 +23,7 @@
 
         /**
          * __construct 
-         * 
+         *
          * @param SabreAMF_InputStream $stream 
          * @return void
          */
@@ -33,6 +35,8 @@
 
         /**
          * readAMFData 
+         * 
+         * Starts reading an AMF block from the stream
          * 
          * @param mixed $settype 
          * @return mixed 
