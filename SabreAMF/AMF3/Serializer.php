@@ -3,6 +3,8 @@
     require_once dirname(__FILE__) . '/Const.php';
     require_once dirname(__FILE__) . '/../Const.php';
     require_once dirname(__FILE__) . '/../Serializer.php';
+    require_once dirname(__FILE__) . '/../ITypedObject.php';
+
 
     /**
      * SabreAMF_AMF3_Serializer 
@@ -12,7 +14,10 @@
      * @version $Id$
      * @copyright 2006 Rooftop Solutions
      * @author Evert Pot <evert@collab.nl> 
-     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
+     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
+     * @uses SabreAMF_Const
+     * @uses SabreAMF_AMF3_Const
+     * @uses SabreAMF_ITypedObject
      */
     class SabreAMF_AMF3_Serializer extends SabreAMF_Serializer {
 
@@ -106,7 +111,7 @@
          * @param int $int 
          * @return void
          */
-        private function writeInt($int) {
+        public function writeInt($int) {
 
             $count = 0;
             $bytes = array();
@@ -130,7 +135,7 @@
          * @param string $str 
          * @return void
          */
-        private function writeString($str) {
+        public function writeString($str) {
 
             $strref = strlen($str) << 1 | 0x01;
             $this->writeInt($strref);
@@ -144,7 +149,7 @@
          * @param array $arr 
          * @return void
          */
-        private function writeArray($arr) {
+        public function writeArray($arr) {
 
             end($arr);
             $arrLen = count($arr); 

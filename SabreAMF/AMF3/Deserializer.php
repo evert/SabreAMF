@@ -2,8 +2,8 @@
 
     require_once dirname(__FILE__) . '/Const.php';
     require_once dirname(__FILE__) . '/../Const.php';
-    require_once dirname(__FILE__) . '/../InputStream.php';
     require_once dirname(__FILE__) . '/../TypedObject.php';
+    require_once dirname(__FILE__) . '/../Deserializer.php';
 
 
     /**
@@ -14,7 +14,10 @@
      * @version $Id$
      * @copyright 2006 Rooftop Solutions
      * @author Evert Pot <evert@collab.nl> 
-     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
+     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
+     * @uses SabreAMF_Const
+     * @uses SabreAMF_AMF3_Const
+     * @uses SabreAMF_TypedObject
      */
     class SabreAMF_AMF3_Deserializer extends SabreAMF_Deserializer {
 
@@ -147,7 +150,7 @@
          * 
          * @return array 
          */
-        private function readArray() {
+        public function readArray() {
 
             $arrId = $this->readInt();
             if (($arrId & 0x01)==0) {
@@ -180,7 +183,7 @@
          * 
          * @return string 
          */
-        private function readString() {
+        public function readString() {
 
             $strref = $this->readInt();
 
@@ -206,7 +209,7 @@
          * 
          * @return int 
          */
-        private function readInt() {
+        public function readInt() {
 
             $count = 1;
             $int = 0;
@@ -236,7 +239,7 @@
          * 
          * @return int 
          */
-        private function readDate() {
+        public function readDate() {
             $timeOffset = $this->readInt();
             if (($timeOffset & 0x01) == 0) {
                 $dateRef = $timeOffset >> 1;

@@ -15,7 +15,12 @@
      * @version $Id$
      * @copyright 2006 Rooftop Solutions
      * @author Evert Pot <evert@collab.nl> 
-     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
+     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
+     * @uses SabreAMF_OutputStream
+     * @uses SabreAMF_InputStream
+     * @uses SabreAMF_Message
+     * @uses SabreAMF_Const
+     * @example ../examples/server.php
      */
     class SabreAMF_Server {
 

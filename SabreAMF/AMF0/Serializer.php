@@ -15,7 +15,12 @@
      * @version $Id$
      * @copyright 2006 Rooftop Solutions
      * @author Evert Pot <evert@collab.nl> 
-     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
+     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
+     * @uses SabreAMF_Const
+     * @uses SabreAMF_AMF0_Const
+     * @uses SabreAMF_AMF3_Serializer
+     * @uses SabreAMF_AMF3_Wrapper
+     * @uses SabreAMF_ITypedObject
      */
     class SabreAMF_AMF0_Serializer extends SabreAMF_Serializer {
 

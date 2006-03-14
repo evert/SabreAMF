@@ -1,5 +1,6 @@
 <?php
 
+
     require_once(dirname(__FILE__) . '/Message.php');
     require_once(dirname(__FILE__) . '/OutputStream.php');
     require_once(dirname(__FILE__) . '/InputStream.php');
@@ -16,6 +17,9 @@
      * @licence http://www.freebsd.org/copyright/license.html  BSD License
      * @link http://www.osflash.org/sabreamf
      * @example ../examples/client.php
+     * @uses SabreAMF_Message
+     * @uses SabreAMF_OutputStream
+     * @uses SabreAMF_InputStream
      */
     class SabreAMF_Client {
 

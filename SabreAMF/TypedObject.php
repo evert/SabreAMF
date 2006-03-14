@@ -10,6 +10,7 @@
      * @copyright 2006 Rooftop Solutions
      * @author Evert Pot <evert@collab.nl> 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
+     * @uses SabreAMF_ITypedObject
      */
     class SabreAMF_TypedObject implements SabreAMF_ITypedObject {
 
