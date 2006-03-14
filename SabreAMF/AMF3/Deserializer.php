@@ -61,6 +61,7 @@
                 case SabreAMF_AMF3_Const::DT_NUMBER     : return $this->stream->readDouble();
                 case SabreAMF_AMF3_Const::DT_STRING     : return $this->readString();
                 case SabreAMF_AMF3_Const::DT_XML        : return $this->readString();
+                case SabreAMF_AMF3_Const::DT_DATE       : return $this->readDate();
                 case SabreAMF_AMF3_Const::DT_ARRAY      : return $this->readArray();
                 case SabreAMF_AMF3_Const::DT_OBJECT     : return $this->readObject();
                 default                   :  throw new Exception('Unsupported type: 0x' . strtoupper(str_pad(dechex($settype),2,0,STR_PAD_LEFT))); return false;
@@ -230,6 +231,29 @@
          
         }
 
+        /**
+         * readDate 
+         * 
+         * @return int 
+         */
+        private function readDate() {
+            $timeOffset = $this->readInt();
+            if (($timeOffset & 0x01) == 0) {
+                $dateRef = $timeOffset >> 1;
+                if ($dateRef>=count($this->storedObjects)) {
+                    throw new Exception('Undefined date reference: ' . $dateRef);
+                    return false;
+                }
+                return $this->storedObjects[$arrId];
+            }
+            $timeOffset = ($timeOffset >> 1) * 6000 * -1;
+            $ms = $this->stream->readDouble();
+
+            $date = $ms-$timeOffset;
+            $this->storedObjects[] = $date;
+            return $date;
+        }
+ 
 
     }
 

@@ -68,7 +68,7 @@
 
                 $serializer = new SabreAMF_AMF0_Serializer($stream);
                 
-                $stream->writeString($header['name']);
+                $serializer->writeString($header['name']);
                 $stream->writeByte($header['required']==true);
                 $stream->writeLong(-1);
                 $serializer->writeAMFData($header['data']);
