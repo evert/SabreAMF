@@ -117,7 +117,7 @@
                     'required' => $stream->readByte()==true
                 );
                 $stream->readLong();
-                $header['data']  = $deserializer->readAMFData();
+                $header['data']  = $deserializer->readAMFData(null,true);
                 $this->headers[] = $header;    
 
             }
@@ -138,7 +138,7 @@
                     'target'   => $target,
                     'response' => $deserializer->readString(),
                     'length'   => $stream->readLong(),
-                    'data'     => $deserializer->readAMFData()
+                    'data'     => $deserializer->readAMFData(null,true)
                 );
                 
                 $this->bodies[] = $body;    
