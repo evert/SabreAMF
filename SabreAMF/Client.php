@@ -75,7 +75,7 @@
          * @param mixed $data The parameters you want to send
          * @return mixed 
          */
-        function sendRequest($servicePath,$data) {
+        public function sendRequest($servicePath,$data) {
 
             $ch = curl_init($this->endPoint);
             $this->amfRequest->addBody(array(
@@ -99,10 +99,12 @@
             } else {
                 curl_close($ch);
             }
-        
+       
             $this->amfInputStream = new SabreAMF_InputStream($result);
             $this->amfResponse = new SabreAMF_Message(); 
             $this->amfResponse->deserialize($this->amfInputStream);
+
+            $this->parseHeaders();
 
             foreach($this->amfResponse->getBodies() as $body) {
 
@@ -112,6 +114,58 @@
 
         }
 
+        /**
+         * addHeader 
+         *
+         * Add a header to the client request
+         * 
+         * @param string $name 
+         * @param bool $required 
+         * @param mixed $data 
+         * @return void
+         */
+        public function addHeader($name,$required,$data) {
+
+            $this->amfRequest->addHeader(array('name'=>$name,'required'=>$required==true,'data'=>$data));
+
+        }
+       
+        /**
+         * setCredentials 
+         * 
+         * @param string $username 
+         * @param string $password 
+         * @return void
+         */
+        public function setCredentials($username,$password) {
+
+            $this->addHeader('Credentials',false,(object)array('userid'=>$username,'password'=>$password));
+
+        }
+
+        /**
+         * parseHeaders 
+         * 
+         * @return void
+         */
+        private function parseHeaders() {
+
+            foreach($this->amfResponse->getHeaders() as $header) {
+
+                switch($header['name']) {
+
+                    case 'ReplaceGatewayUrl' :
+                        if (is_string($header['data'])) {
+                            $this->endPoint = $header['data'];
+                        }
+                        break;
+
+                }
+
+
+            }
+
+        }
 
     }
 

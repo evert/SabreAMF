@@ -75,6 +75,7 @@
             }
             $stream->writeInt(count($this->bodies));
 
+
             foreach($this->bodies as $body) {
                 $serializer = new SabreAMF_AMF0_Serializer($stream);
                 $serializer->writeString($body['target']);
@@ -125,9 +126,16 @@
 
             for($i=0;$i<$totalBodies;$i++) {
 
+                try {
+                    $target = $deserializer->readString();
+                } catch (Exception $e) {
+                    // Could not fetch next body.. this happens with some versions of AMFPHP where the body
+                    // count isn't properly set. If this happens we simply stop decoding
+                    break;
+                }
 
                 $body = array(
-                    'target'   => $deserializer->readString(),
+                    'target'   => $target,
                     'response' => $deserializer->readString(),
                     'length'   => $stream->readLong(),
                     'data'     => $deserializer->readAMFData()
@@ -190,6 +198,20 @@
         public function addBody($body) {
 
             $this->bodies[] = $body;
+
+        }
+
+        /**
+         * addHeader 
+         * 
+         * Adds a message header
+         * 
+         * @param mixed $header 
+         * @return void
+         */
+        public function addHeader($header) {
+
+            $this->headers[] = $header;
 
         }
 
