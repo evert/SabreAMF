@@ -83,7 +83,9 @@
                 if ($vartype==SabreAMF_AMF0_Const::DT_OBJECTTERM) break;
                 $object[$key] = $this->readAmfData($vartype);
             }
-            $object = (object)$object;
+            if (defined('SABREAMF_OBJECT_AS_ARRAY')) {
+                $object = (object)$object;
+            }
             $this->refList[] = $object;
             return $object;    
 
