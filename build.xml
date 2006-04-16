@@ -20,8 +20,8 @@
 
     <target name="build" depends="prepare">
          <echo msg="Copying source files" />
-         <mkdir dir="${BUILDDIR}/SabreAMF" />
-         <copy todir="${BUILDDIR}/SabreAMF">
+         <mkdir dir="${BUILDDIR}" />
+         <copy todir="${BUILDDIR}">
             <fileset dir="SabreAMF/">
                 <include name="*.php" />
                 <include name="AMF0/*.php" />
@@ -45,12 +45,11 @@
         <copy todir="${BUILDDIR}" file="README" />
     </target>    
 
-    <target name="package" depends="build">
+    <target name="package" depends="build, pearpkg">
         <echo msg="packaging" />
-        <tar destfile="${BUILDDIR}/sabreamf-r${svn.lastrevision}.tar.gz" compression="gzip" basedir="${BUILDDIR}" />
     </target>
 
-    <target name="pearpkg">
+    <target name="pearpkg" depends="prepare, build, buildexamples">
         <pearpkg name="SabreAMF" dir="${BUILDDIR}" destFile="${BUILDDIR}/package.xml">
             <fileset refid="pkgfiles" />
             <option name="notes">This is a alpha-prerelease</option>
@@ -85,7 +84,7 @@
         <phpdoc title="SabreAMF API Documentation" destdir="build/apidocs" sourcepath="SabreAMF/" output="HTML:frames:default" />
     </target>
 
-    <target name="dist" depends="build, buildexamples, textfiles, package">
+    <target name="dist" depends="build, buildexamples, textfiles, pearpkg">
         <echo msg="Creating full featured SabreAMF package" />
     </target>    
 
@@ -94,9 +93,5 @@
         <delete dir="build/" />
         <delete dir="apidocs" />
     </target>    
-
-    <target name="publishsnapshot" depends="clean, dist">
-        <copy file="${BUILDDIR}/sabreamf-r${svn.lastrevision}.tar.gz" todir="/home/www/download.collab.nl/products/sabreamf/snapshots/" /> 
-    </target>
 
 </project>
