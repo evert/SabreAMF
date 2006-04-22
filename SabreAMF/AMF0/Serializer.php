@@ -40,7 +40,15 @@
                 if (!$type && is_numeric($data)) $type = SabreAMF_AMF0_Const::DT_NUMBER;
                 if (!$type && is_string($data) && strlen($data)>65536) $type = SabreAMF_Const::DT_LONGSTRING;
                 if (!$type && is_string($data))  $type = SabreAMF_AMF0_Const::DT_STRING;
-                if (!$type && is_array($data))   $type = SabreAMF_AMF0_Const::DT_MIXEDARRAY;
+                if (!$type && is_array($data))   {
+                    foreach(array_keys($data) as $key) {
+                        if (!is_numeric($key)) {
+                            $type = SabreAMF_AMF0_Const::DT_MIXEDARRAY;
+                            break;
+                        }
+                    }
+                    if (!$type) $type = SabreAMF_AMF0_Const::DT_ARRAY;
+                }
                 if (!$type && is_object($data)) {
                     if($data instanceof SabreAMF_ITypedObject) $type = SabreAMF_AMF0_Const::DT_TYPEDOBJECT;
                     else if ($data instanceof SabreAMF_AMF3_Wrapper) $type = SabreAMF_AMF0_Const::DT_AMF3;
@@ -61,8 +69,8 @@
                 case SabreAMF_AMF0_Const::DT_STRING      : return $this->writeString($data);
                 case SabreAMF_AMF0_Const::DT_OBJECT      : return $this->writeObject($data);
                 case SabreAMF_AMF0_Const::DT_NULL        : return true; 
-                //case self::AT_REFERENCE   : return $this->readReference();
                 case SabreAMF_AMF0_Const::DT_MIXEDARRAY  : return $this->writeMixedArray($data);
+                case SabreAMF_AMF0_Const::DT_ARRAY       : return $this->writeArray($data);
                 case SabreAMF_AMF0_Const::DT_LONGSTRING  : return $this->writeLongString();
                 case SabreAMF_AMF0_Const::DT_TYPEDOBJECT : return $this->writeTypedObject($data);
                 case SabreAMF_AMF0_Const::DT_AMF3        : return $this->writeAMF3Data($data);
@@ -87,6 +95,24 @@
             }
             $this->writeString('');
             $this->stream->writeByte(SabreAMF_AMF0_Const::DT_OBJECTTERM);
+
+        }
+
+        /**
+         * writeArray 
+         * 
+         * @param array $data 
+         * @return void
+         */
+        public function writeArray($data) {
+
+            end($data);
+            $last = key($data);
+            $this->stream->writeLong($last+1);
+            for($i=0;$i<=$last;$i++) {
+                $item = isset($data[$i])?$data[$i]:NULL;
+                $this->writeAMFData($item);
+            }
 
         }
 
