@@ -57,7 +57,9 @@
          */
         public function __construct($dump = false) {
 
-            $data = isset($GLOBALS['HTTP_RAW_POST_DATA'])?$GLOBALS['HTTP_RAW_POST_DATA']:file_get_contents(dirname(__FILE__) . '/test.amf');
+            $data = isset($GLOBALS['HTTP_RAW_POST_DATA'])?$GLOBALS['HTTP_RAW_POST_DATA']:false;
+
+            if (!$data) throw new Exception('No valid AMF request received');
 
             if ($dump) file_put_contents($dump.'/' . md5($data),$data);
 
