@@ -57,6 +57,7 @@
 
            switch ($settype) {
 
+                case SabreAMF_AMF3_Const::DT_UNDEFINED  : return null; 
                 case SabreAMF_AMF3_Const::DT_NULL       : return null; 
                 case SabreAMF_AMF3_Const::DT_BOOL_FALSE : return false;
                 case SabreAMF_AMF3_Const::DT_BOOL_TRUE  : return true;
