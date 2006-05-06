@@ -28,7 +28,13 @@
          * 
          * @var mixed
          */
-        private $endPoint; 
+        private $endPoint;
+        /**
+         * httpProxy
+         * 
+         * @var mixed
+         */
+        private $httpProxy;
         /**
          * amfInputStream 
          * 
@@ -94,7 +100,9 @@
             curl_setopt($ch,CURLOPT_TIMEOUT,20);
             curl_setopt($ch,CURLOPT_HTTPHEADER,array('Content-type: application/x-amf'));
             curl_setopt($ch,CURLOPT_POSTFIELDS,$this->amfOutputStream->getRawData());
-
+			if ($this->httpProxy) {
+				curl_setopt($ch,CURLOPT_PROXY,$this->httpProxy);
+			}
             $result = curl_exec($ch);
  
             if (curl_errno($ch)) {
@@ -145,6 +153,16 @@
 
             $this->addHeader('Credentials',false,(object)array('userid'=>$username,'password'=>$password));
 
+        }
+        
+        /**
+         * setHttpProxy
+         * 
+         * @param mixed $httpProxy
+         * @return void
+         */
+        public function setHttpProxy($httpProxy) {
+        	$this->httpProxy = $httpProxy;
         }
 
         /**
