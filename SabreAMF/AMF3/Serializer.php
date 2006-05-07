@@ -50,6 +50,9 @@
                     throw new Exception('Unhandled data-type: ' . gettype($data));
                     return null;
                 }
+                if ($type == SabreAMF_AMF3_Const::DT_INTEGER && ($data > 268435455 || $data < -268435456)) {
+                	$type = SabreAMF_AMF3_Const::DT_NUMBER;
+                }
            } else $type = $forcetype;
 
            $this->stream->writeByte($type);
