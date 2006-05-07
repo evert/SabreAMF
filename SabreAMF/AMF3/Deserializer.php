@@ -14,6 +14,7 @@
      * @version $Id$
      * @copyright 2006 Rooftop Solutions
      * @author Evert Pot <evert@collab.nl> 
+     * @author Karl von Randow http://xk72.com/
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
      * @uses SabreAMF_Const
      * @uses SabreAMF_AMF3_Const
@@ -68,6 +69,7 @@
                 case SabreAMF_AMF3_Const::DT_DATE       : return $this->readDate();
                 case SabreAMF_AMF3_Const::DT_ARRAY      : return $this->readArray();
                 case SabreAMF_AMF3_Const::DT_OBJECT     : return $this->readObject();
+                case SabreAMF_AMF3_Const::DT_XMLSTRING  : return $this->readXMLString();
                 default                   :  throw new Exception('Unsupported type: 0x' . strtoupper(str_pad(dechex($settype),2,0,STR_PAD_LEFT))); return false;
 
 
@@ -95,51 +97,85 @@
                 return (object)$this->storedObjects[$objref]; 
             } else {
                 $classref = $objref >> 1;
+                $objType = ($classref>>1) & 0x03;
         
                 // Check if class is stored
                 
                 if (($classref & 0x01) == 0) {
-                    die('Stored class');
+                    $classref = $classref >> 1;
+                    if ($classref>=count($this->storedObjects)) {
+	                    throw new Exception('Undefined class reference: ' . $classref);
+	                    return false;
+	                }
+	                $classtemplate = $this->storedObjects[$classref];
+	                if ($classtemplate instanceof SabreAMF_ITypedObject) {
+						$classname = $classtemplate->getAMFClassName();	                	
+	                } else {
+	                	$classname = false;
+	                }
                 } else {
                     $classname = $this->readString();
+                    $classtemplate = false;
                 }
-
-                $objType = ($classref>>1) & 0x03;
+                
+                // Create the values array and store it in the storedObjects
+                // before reading the properties.
+                $values = array();
+                if ($classname) {
+                    $obj = new SabreAMF_TypedObject($classname,$values);
+                } else {
+                	$obj = &$values;
+                }
+                
+                $this->storedObjects[] = $obj;
 
                 // Check to see the encoding type
-                if (($objType & 2)==2) {
-                    // Property-value pairs
-                    $obj = array();
-                    do {
-                        $propertyName = $this->readString();
-                        if ($propertyName!='' && !is_null($propertyName)) {
-                            $propValue = $this->readAMFData();
-                            $obj[$propertyName] = $propValue;
-                        }
-                    } while($propertyName !='');
-                 } else {
-                    $propertyCount = $classref >> 3;
-                
-                     $obj = array();
-                     $propertyNames = array();
-                     if (($objType & 1)==1) {
-                          // One single value, no propertyname. Not sure what to do with this, so following ServiceCapture's example and naming the property 'source'
-                          $propertyNames[] = 'source';
-                     } else {
-                        //None of the above. First read all the propertynames, then the values 
+                switch ($objType) {
+                	case 2:
+                	{
+                		if ($classtemplate) {
+                			$propertyNames = array_keys($classtemplate->getAMFData());
+                			for ($i=0; $i<count($propertyNames); $i++) {
+                				$values[$propertyNames[$i]] = $this->readAMFData();
+                			}
+                		} else {
+	                		// Property-value pairs
+		                    do {
+		                        $propertyName = $this->readString();
+		                        if ($propertyName!='' && !is_null($propertyName)) {
+		                            $propValue = $this->readAMFData();
+		                            $values[$propertyName] = $propValue;
+		                        }
+		                    } while($propertyName !='');
+                		}
+                	}
+                	break;
+                	case 1:
+                	{
+                		// One single value, no propertyname. Not sure what to do with this, so following ServiceCapture's example and naming the property 'source'
+                        $values["source"] = $this->readAMFData();
+                	}
+                	break;
+                	case 0:
+                	{
+                		$propertyCount = $classref >> 3;
+                		$propertyNames = array();
+                		// First read all the propertynames, then the values 
                         for($i=0;$i<$propertyCount;$i++) {
                             $propertyName = $this->readString();
                              $propertyNames[] = $propertyName;
                         }
-                     }
-                     foreach($propertyNames as $pn) {
-                         $obj[$pn] = $this->readAMFData();
-                     }
+                        
+                        foreach($propertyNames as $pn) {
+	                        $values[$pn] = $this->readAMFData();
+	                    }
+                	}
+                	break;
                 }
-                if ($classname) {
-                    $obj = new SabreAMF_TypedObject($classname,$obj);
-                }
-                $this->storedObjects[] = $obj;
+                
+	            if ($obj instanceof SabreAMF_ITypedObject) {
+	        		$obj->setAMFData($values);
+	            }
                 return (object)$obj;
                 
             }
@@ -203,6 +239,22 @@
             }
 
         }
+        
+
+        /**
+         * readString 
+         * 
+         * @return string 
+         */
+        public function readXMLString() {
+
+            $strref = $this->readInt();
+
+            $strlen = $strref >> 1; 
+            $str = $this->stream->readBuffer($strlen);
+            return $str;
+
+        }
 
 
         /**
@@ -217,20 +269,28 @@
 
             $byte = $this->stream->readByte();
 
-            while(($byte >> 7 == 1) && $count < 4) {
-                $int = ($int  | (($byte & 0x7F) << ($count*7)));
+			while((($byte & 0x80) != 0) && $count < 4) {
+                $int <<= 7;
+                $int |= ($byte & 0x7f);
                 $byte = $this->stream->readByte();
-                echo("Read: $byte\n");
                 $count++;
             }
-            $int = $int | $byte;
-
-/*
-            //Negative values
-            if (($int >> 27)==1) {
-                $int = $int | 0xF0000000;
+            
+            if ($count < 4) {
+            	$int <<= 7;
+            	$int |= $byte;
+            } else {
+            	// Use all 8 bits from the 4th byte
+            	$int <<= 8;
+            	$int |= $byte;
+            	
+            	// Check if the integer should be negative
+            	if (($int & 0x10000000) != 0) {
+            		// and extend the sign bit
+            		$int |= 0xe0000000;
+            	}
             }
-*/
+            
             return $int;
          
         }
@@ -241,19 +301,21 @@
          * @return int 
          */
         public function readDate() {
-            $timeOffset = $this->readInt();
-            if (($timeOffset & 0x01) == 0) {
-                $dateRef = $timeOffset >> 1;
-                if ($dateRef>=count($this->storedObjects)) {
-                    throw new Exception('Undefined date reference: ' . $dateRef);
+            $dateref = $this->readInt();
+            if (($dateref & 0x01) == 0) {
+                $dateref = $dateref >> 1;
+                if ($dateref>=count($this->storedObjects)) {
+                    throw new Exception('Undefined date reference: ' . $dateref);
                     return false;
                 }
-                return $this->storedObjects[$arrId];
+                return $this->storedObjects[$dateref];
             }
-            $timeOffset = ($timeOffset >> 1) * 6000 * -1;
+            //$timeOffset = ($dateref >> 1) * 6000 * -1;
             $ms = $this->stream->readDouble();
 
-            $date = $ms-$timeOffset;
+            //$date = $ms-$timeOffset;
+            $date = $ms;
+            
             $this->storedObjects[] = $date;
             return $date;
         }
