@@ -14,6 +14,7 @@
      * @version $Id$
      * @copyright 2006 Rooftop Solutions
      * @author Evert Pot <evert@collab.nl> 
+     * @author Karl von Randow http://xk72.com/
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
      * @uses SabreAMF_Const
      * @uses SabreAMF_AMF3_Const
@@ -59,6 +60,7 @@
                 case SabreAMF_AMF3_Const::DT_BOOL_FALSE  : break;
                 case SabreAMF_AMF3_Const::DT_BOOL_TRUE   : break;
                 case SabreAMF_AMF3_Const::DT_INTEGER     : $this->writeInt($data); break;
+                case SabreAMF_AMF3_Const::DT_NUMBER      : $this->stream->writeDouble($data); break;
                 case SabreAMF_AMF3_Const::DT_STRING      : $this->writeString($data); break;
                 case SabreAMF_AMF3_Const::DT_ARRAY       : $this->writeArray($data); break;
                 case SabreAMF_AMF3_Const::DT_OBJECT      : $this->writeObject($data); break; 
@@ -115,8 +117,15 @@
 
             $count = 0;
             $bytes = array();
-            for($i=0;$i<4;$i++) {
-                $bytes[] = ($int >> (7*$i)) & 0x7F;
+            if (($int & 0xff000000) != 0) {
+            	$bytes[] = $int & 0xFF;
+            	for($i=0;$i<3;$i++) {
+	                $bytes[] = ($int >> (8 + 7*$i)) & 0x7F;
+	            }
+            } else {
+	            for($i=0;$i<4;$i++) {
+	                $bytes[] = ($int >> (7*$i)) & 0x7F;
+	            }
             }
             $bytes = array_reverse($bytes);
             while(count($bytes)>1 && $bytes[0] == 0) {
