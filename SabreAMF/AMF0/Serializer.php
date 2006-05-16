@@ -106,12 +106,16 @@
          */
         public function writeArray($data) {
 
-            end($data);
-            $last = key($data);
-            $this->stream->writeLong($last+1);
-            for($i=0;$i<=$last;$i++) {
-                $item = isset($data[$i])?$data[$i]:NULL;
-                $this->writeAMFData($item);
+            if (!count($data)) {
+                $this->stream->writeLong(0);
+            } else {
+                end($data);
+                $last = key($data);
+                $this->stream->writeLong($last+1);
+                for($i=0;$i<=$last;$i++) {
+                    $item = isset($data[$i])?$data[$i]:NULL;
+                    $this->writeAMFData($item);
+                }
             }
 
         }
