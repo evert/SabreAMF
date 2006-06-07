@@ -145,7 +145,20 @@
             $this->amfResponse->addHeader(array('name'=>$name,'required'=>$required==true,'data'=>$data));
 
         }
- 
+
+        /**
+         * getRequestHeaders
+         *
+         * returns the request headers
+         *
+         * @return void
+         */
+        public function getRequestHeaders() {
+            
+            return $this->amfRequest->getHeaders();
+
+        }
+
     }
 
 ?>
