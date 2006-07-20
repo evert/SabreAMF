@@ -1,6 +1,5 @@
 <?php
 
-
     /**
      * SabreAMF_Serializer 
      * 
@@ -9,6 +8,17 @@
      * @copyright 2006 Rooftop Solutions
      * @author Evert Pot <evert@collab.nl> 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
+     */
+
+    /**
+     * Including the ClassMapper
+     */
+    require_once 'SabreAMF/ClassMapper.php';
+
+    /**
+     * Abstract Serializer
+     *
+     * This is the abstract serializer class. This is used by the AMF0 and AMF3 serializers as a base class
      */
     abstract class SabreAMF_Serializer {
 
@@ -50,6 +60,18 @@
             return $this->stream;
 
         }
+
+        /**
+         * getRemoteClassName 
+         * 
+         * @param string $localClass 
+         * @return mixed 
+         */
+        protected function getRemoteClassName($localClass) {
+
+            return SabreAMF_ClassMapper::getRemoteClass($localClass);
+
+        } 
 
     }
 

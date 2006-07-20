@@ -55,6 +55,15 @@
          */
         const R_DEBUG  = 3;
 
+        /**
+         * AMF0 Encoding
+         */
+        const AMF0 = 0;
+
+        /**
+         * AMF3 Encoding
+         */
+        const AMF3 = 3;
 
    }
 

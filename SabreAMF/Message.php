@@ -1,8 +1,9 @@
 <?php
 
-    require_once dirname(__FILE__) . '/AMF0/Serializer.php'; 
-    require_once dirname(__FILE__) . '/AMF0/Deserializer.php'; 
-
+    require_once 'SabreAMF/AMF0/Serializer.php'; 
+    require_once 'SabreAMF/AMF0/Deserializer.php'; 
+    require_once 'SabreAMF/Const.php';
+    require_once 'SabreAMF/AMF3/Wrapper.php';
 
     /**
      * SabreAMF_Message 
@@ -51,6 +52,13 @@
         private $headers=array();
 
         /**
+         * encoding 
+         * 
+         * @var int 
+         */
+        private $encoding = SabreAMF_Const::AMF0;
+
+        /**
          * serialize 
          * 
          * This method serializes a request. It requires an SabreAMF_OutputStream as an argument to read
@@ -69,12 +77,12 @@
             foreach($this->headers as $header) {
 
                 $serializer = new SabreAMF_AMF0_Serializer($stream);
-                
                 $serializer->writeString($header['name']);
                 $stream->writeByte($header['required']==true);
                 $stream->writeLong(-1);
                 $serializer->writeAMFData($header['data']);
             }
+
             $stream->writeInt(count($this->bodies));
 
 
@@ -83,7 +91,18 @@
                 $serializer->writeString($body['target']);
                 $serializer->writeString($body['response']);
                 $stream->writeLong(-1);
-                $serializer->writeAMFData($body['data']);
+                
+                switch($this->encoding) {
+
+                    case SabreAMF_Const::AMF0 :
+                        $serializer->writeAMFData($body['data']);
+                        break;
+                    case SabreAMF_Const::AMF3 :
+                        $serializer->writeAMFData(new SabreAMF_AMF3_Wrapper($body['data']));
+                        break;
+
+                }
+
             }
 
         }
@@ -142,7 +161,13 @@
                     'length'   => $stream->readLong(),
                     'data'     => $deserializer->readAMFData(null,true)
                 );
-                
+              
+             
+                if (is_array($body['data']) && isset($body['data'][0]) && $body['data'][0] instanceof SabreAMF_AMF3_Wrapper) {
+                    $body['data'] = $body['data'][0]->getData();
+                    $this->encoding = SabreAMF_Const::AMF3;
+                }
+               
                 $this->bodies[] = $body;    
 
             }
@@ -214,6 +239,29 @@
         public function addHeader($header) {
 
             $this->headers[] = $header;
+
+        }
+
+        /**
+         * setEncoding 
+         * 
+         * @param int $encoding 
+         * @return void
+         */
+        public function setEncoding($encoding) {
+
+            $this->encoding = $encoding;
+
+        }
+
+        /**
+         * getEncoding 
+         * 
+         * @return int 
+         */
+        public function getEncoding() {
+
+            return $this->encoding; 
 
         }
 

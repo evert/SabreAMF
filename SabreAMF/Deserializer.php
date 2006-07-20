@@ -1,16 +1,25 @@
 <?php
 
-
     /**
      * SabreAMF_Deserializer 
-     * 
-     * This is the abstract Deserializer. The AMF0 and AMF3 classes descent from this class
      * 
      * @package SabreAMF 
      * @version $Id$
      * @copyright 2006 Rooftop Solutions
      * @author Evert Pot <evert@collab.nl> 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
+     */
+
+    /**
+     * We need the classmapper
+     */
+    require_once 'SabreAMF/ClassMapper.php';
+
+
+    /**
+     * SabreAMF_Deserializer 
+     * 
+     * This is the abstract Deserializer. The AMF0 and AMF3 classes descent from this class
      */
     abstract class SabreAMF_Deserializer {
 
@@ -43,6 +52,18 @@
          */
         public abstract function readAMFData($settype = null); 
 
+
+        /**
+         * getLocalClassName 
+         * 
+         * @param string $remoteClass 
+         * @return mixed 
+         */
+        protected function getLocalClassName($remoteClass) {
+
+            return SabreAMF_ClassMapper::getLocalClass($remoteClass);
+
+        } 
 
    }
 
