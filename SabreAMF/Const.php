@@ -30,9 +30,9 @@
         /**
          * AC_Flex
          *
-         * Specifies a FlashPlayer 8.5 client
+         * Specifies a FlashPlayer 9.0 client
          */
-        const AC_Flex = 3;
+        const AC_Flash9 = 3;
 
         /**
          * R_RESULT

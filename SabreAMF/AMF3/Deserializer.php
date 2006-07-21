@@ -1,6 +1,8 @@
 <?php
 
     require_once 'SabreAMF/AMF3/RemotingMessage.php';
+    require_once 'SabreAMF/AMF3/CommandMessage.php';
+    require_once 'SabreAMF/AMF3/AcknowledgeMessage.php';
     require_once 'SabreAMF/AMF3/Const.php';
     require_once 'SabreAMF/Const.php';
     require_once 'SabreAMF/TypedObject.php';
