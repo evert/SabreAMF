@@ -14,7 +14,11 @@
         /**
          * @var $maps array
          */
-        static public $maps = array();
+        static public $maps = array(
+            'flex.messaging.messages.RemotingMessage'    => 'SabreAMF_AMF3_RemotingMessage',
+            'flex.messaging.messages.CommandMessage'     => 'SabreAMF_AMF3_CommandMessage',
+            'flex.messaging.messages.AcknowledgeMessage' => 'SabreAMF_AMF3_AcknownledgeMessage',
+        );
 
         /**
          * The Constructor
@@ -48,7 +52,7 @@
          */
         static public function getLocalClass($remoteClass) {
 
-            return (isset(self::$map[$remoteClass]))?self::$map[$remoteClass]:false;
+            return (isset(self::$maps[$remoteClass]))?self::$maps[$remoteClass]:false;
 
         }
 
@@ -62,7 +66,7 @@
          */
         static public function getRemoteClass($localClass) {
 
-            return array_search(self::$map[$localClass]);
+            return array_search($localClass,self::$maps);
 
         }
 

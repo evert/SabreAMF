@@ -191,8 +191,13 @@
                 if ($vartype==SabreAMF_AMF0_Const::DT_OBJECTTERM) break;
                 $object[$key] = $this->readAmfData($vartype);
             }
-            $object = new SabreAMF_TypedObject($classname,(object)$object);
-            $this->refList[] = $object;
+            $object = (object)$object;
+            if ($classname = $this->getLocalClassName($classname)) {
+                // AAARRRGGGH
+            } else {
+                $object = new SabreAMF_TypedObject($classname,$object);
+                $this->refList[] = $object;
+            }
             return $object;
 
         }

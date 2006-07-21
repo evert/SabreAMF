@@ -33,27 +33,60 @@
          */
         public function writeAMFData($data,$forcetype=null) {
 
+           //If theres no type forced we'll try detecting it
            if (is_null($forcetype)) {
                 $type=false;
+
+                // NULL type
                 if (!$type && is_null($data))    $type = SabreAMF_AMF0_Const::DT_NULL;
+
+                // Boolean
                 if (!$type && is_bool($data))    $type = SabreAMF_AMF0_Const::DT_BOOL;
+
+                // Number
                 if (!$type && is_numeric($data)) $type = SabreAMF_AMF0_Const::DT_NUMBER;
+
+                // String (a long one)
                 if (!$type && is_string($data) && strlen($data)>65536) $type = SabreAMF_Const::DT_LONGSTRING;
+
+                // Normal string
                 if (!$type && is_string($data))  $type = SabreAMF_AMF0_Const::DT_STRING;
+
+                // Checking if its an array
                 if (!$type && is_array($data))   {
+
+                    // Looping through the array to see if there are any
+                    // non-numeric keys
                     foreach(array_keys($data) as $key) {
                         if (!is_numeric($key)) {
+                            // There's a non-numeric key.. we'll make it a mixed
+                            // array
                             $type = SabreAMF_AMF0_Const::DT_MIXEDARRAY;
                             break;
                         }
                     }
+
+                    // Pure array
                     if (!$type) $type = SabreAMF_AMF0_Const::DT_ARRAY;
                 }
+
+                // Its an object
                 if (!$type && is_object($data)) {
-                    if($data instanceof SabreAMF_ITypedObject) $type = SabreAMF_AMF0_Const::DT_TYPEDOBJECT;
+
+                    // We'll see if its registered in the classmapper
+                    if ($this->getRemoteClassName(get_class($data))) $type = SabreAMF_AMF0_Const::DT_TYPEDOBJECT;
+
+                    // Otherwise.. check if it its an TypedObject
+                    else if ($data instanceof SabreAMF_ITypedObject) $type = SabreAMF_AMF0_Const::DT_TYPEDOBJECT;
+
+                    // If its an AMF3 wrapper.. we treat it as such
                     else if ($data instanceof SabreAMF_AMF3_Wrapper) $type = SabreAMF_AMF0_Const::DT_AMF3;
+
+                    // If everything else fails, its a general object
                     else $type = SabreAMF_AMF0_Const::DT_OBJECT;
                 }
+
+                // If everything failed, throw an exception
                 if ($type===false) {
                     throw new Exception('Unhandled data-type: ' . gettype($data));
                     return null;
@@ -68,7 +101,7 @@
                 case SabreAMF_AMF0_Const::DT_BOOL        : return $this->stream->writeByte($data==true);
                 case SabreAMF_AMF0_Const::DT_STRING      : return $this->writeString($data);
                 case SabreAMF_AMF0_Const::DT_OBJECT      : return $this->writeObject($data);
-                case SabreAMF_AMF0_Const::DT_NULL        : return true; 
+                case SabreAMF_AMF0_Const::DT_NULL        : return true;
                 case SabreAMF_AMF0_Const::DT_MIXEDARRAY  : return $this->writeMixedArray($data);
                 case SabreAMF_AMF0_Const::DT_ARRAY       : return $this->writeArray($data);
                 case SabreAMF_AMF0_Const::DT_LONGSTRING  : return $this->writeLongString();
@@ -166,13 +199,18 @@
        /**
          * writeTypedObject 
          * 
-         * @param SabreAMF_ITypedObject $data 
+         * @param object $data 
          * @return void
          */
-        public function writeTypedObject(SabreAMF_ITypedObject $data) {
+        public function writeTypedObject(object $data) {
 
-            $this->writeString($data->getAMFClassName());
-            return $this->writeObject($data->getAMFData());
+            if ($data instanceof SabreAMF_ITypedObject) {
+                $classname = $data->getAMFClassName();
+                $data = $data->getAMFData();
+            } else $classname = $this->getRemoteClass(get_class($data));
+
+            $this->writeString($classname);
+            return $this->writeObject($data);
 
         }
 

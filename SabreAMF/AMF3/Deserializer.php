@@ -1,9 +1,10 @@
 <?php
 
-    require_once dirname(__FILE__) . '/Const.php';
-    require_once dirname(__FILE__) . '/../Const.php';
-    require_once dirname(__FILE__) . '/../TypedObject.php';
-    require_once dirname(__FILE__) . '/../Deserializer.php';
+    require_once 'SabreAMF/AMF3/RemotingMessage.php';
+    require_once 'SabreAMF/AMF3/Const.php';
+    require_once 'SabreAMF/Const.php';
+    require_once 'SabreAMF/TypedObject.php';
+    require_once 'SabreAMF/Deserializer.php';
 
 
     /**
@@ -121,8 +122,14 @@
                 // Create the values array and store it in the storedObjects
                 // before reading the properties.
                 $values = array();
+                $isMapped = false;
                 if ($classname) {
-                    $obj = new SabreAMF_TypedObject($classname,$values);
+                    if ($localClass = $this->getLocalClassName($classname)) {
+                        $obj = new $localClass();
+                        $isMapped = true;
+                    } else {   
+                        $obj = new SabreAMF_TypedObject($classname,$values);
+                    }
                 } else {
                 	$obj = &$values;
                 }
@@ -173,9 +180,14 @@
                 	break;
                 }
                 
-	            if ($obj instanceof SabreAMF_ITypedObject) {
+                if ($isMapped) {
+                    foreach($values as $k=>$v) {
+                        $obj->$k = $v;
+                    }
+                } else if ($obj instanceof SabreAMF_ITypedObject) {
 	        		$obj->setAMFData($values);
-	            }
+	            } 
+
                 return (object)$obj;
                 
             }
