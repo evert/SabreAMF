@@ -86,7 +86,7 @@
                 $classname = $data->getAMFClassName();
                 $data = $data->getAMFData();
 
-            } else {
+            } else if (!$classname = $this->getRemoteClassName(get_class($data))) {
 
                 $classname = '';
 

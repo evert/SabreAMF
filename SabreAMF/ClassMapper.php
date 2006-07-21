@@ -17,7 +17,7 @@
         static public $maps = array(
             'flex.messaging.messages.RemotingMessage'    => 'SabreAMF_AMF3_RemotingMessage',
             'flex.messaging.messages.CommandMessage'     => 'SabreAMF_AMF3_CommandMessage',
-            'flex.messaging.messages.AcknowledgeMessage' => 'SabreAMF_AMF3_AcknownledgeMessage',
+            'flex.messaging.messages.AcknowledgeMessage' => 'SabreAMF_AMF3_AcknowledgeMessage',
         );
 
         /**

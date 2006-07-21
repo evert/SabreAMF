@@ -125,6 +125,7 @@
         public function sendResponse() {
 
             header('Content-Type: application/x-amf');
+            $this->amfResponse->setEncoding($this->amfRequest->getEncoding());
             $this->amfResponse->serialize($this->amfOutputStream);
             echo($this->amfOutputStream->getRawData());
 
