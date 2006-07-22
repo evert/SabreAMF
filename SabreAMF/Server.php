@@ -111,7 +111,7 @@
                         $target = '/onDebugEvents';
                         break;
             }
-            return $this->amfResponse->addBody(array('target'=>$target,'response'=>'null','data'=>$data));
+            return $this->amfResponse->addBody(array('target'=>$target,'response'=>'','data'=>$data));
 
         }
 
