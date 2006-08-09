@@ -1,9 +1,9 @@
 <?php
 
-    require_once dirname(__FILE__) . '/Const.php';
-    require_once dirname(__FILE__) . '/../Const.php';
-    require_once dirname(__FILE__) . '/../Serializer.php';
-    require_once dirname(__FILE__) . '/../ITypedObject.php';
+    require_once 'SabreAMF/AMF3/Const.php';
+    require_once 'SabreAMF/Const.php';
+    require_once 'SabreAMF/Serializer.php';
+    require_once 'SabreAMF/ITypedObject.php';
 
 
     /**

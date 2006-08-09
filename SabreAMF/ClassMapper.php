@@ -9,6 +9,12 @@
      * @author Evert Pot <evert@rooftopsolutions.nl> 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
+
+    require_once 'SabreAMF/AMF3/RemotingMessage.php';
+    require_once 'SabreAMF/AMF3/CommandMessage.php';
+    require_once 'SabreAMF/AMF3/AcknowledgeMessage.php';
+    require_once 'SabreAMF/AMF3/ErrorMessage.php';
+    
     final class SabreAMF_ClassMapper {
 
         /**
@@ -18,6 +24,7 @@
             'flex.messaging.messages.RemotingMessage'    => 'SabreAMF_AMF3_RemotingMessage',
             'flex.messaging.messages.CommandMessage'     => 'SabreAMF_AMF3_CommandMessage',
             'flex.messaging.messages.AcknowledgeMessage' => 'SabreAMF_AMF3_AcknowledgeMessage',
+            'flex.messaging.messages.ErrorMessage'       => 'SabreAMF_AMF3_ErrorMessage',
         );
 
         /**

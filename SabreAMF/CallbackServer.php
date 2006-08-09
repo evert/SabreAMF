@@ -1,7 +1,11 @@
 <?php
 
-    require_once(dirname(__FILE__) . '/Server.php');
-
+    require_once('SabreAMF/Server.php');
+    require_once('SabreAMF/AMF3/AbstractMessage.php');
+    require_once('SabreAMF/AMF3/AcknowledgeMessage.php');
+    require_once('SabreAMF/AMF3/RemotingMessage.php');
+    require_once('SabreAMF/AMF3/CommandMessage.php');
+    require_once('SabreAMF/AMF3/ErrorMessage.php');
 
     /**
      * AMF Server
@@ -10,7 +14,7 @@
      *
      * The difference between this server class and the regular server, is that this server is aware of the
      * AMF3 Messaging system, and there is no need to manually construct the AcknowledgeMessage classes.
-     * Also, the Ping message will be done for you.
+     * Also, the response to the ping message will be done for you.
      * 
      * @package SabreAMF 
      * @version $Id$
@@ -21,66 +25,116 @@
      * @uses SabreAMF_Message
      * @uses SabreAMF_Const
      */
-    class SabreAMF_CallbackServer {
+    class SabreAMF_CallbackServer extends SabreAMF_Server {
 
         /**
-         * classpaths 
-         * 
-         * @var array
-         */
-        private $classpaths = array();
-
-        /**
-         * Register a new Service
+         * onInvokeService
          *
-         * @param string $path Service Path
-         * @param mixed $object either an object, or a class
+         * @var callback
          */
-        public function registerService($path,$object) { 
+        public $onInvokeService;
 
-            $this->classpaths[$path] = $object;
+        private function handleCommandMessage(SabreAMF_AMF3_CommandMessage $request) {
+
+            switch($request->operation) {
+
+                case SabreAMF_AMF3_CommandMessage::CLIENT_PING_OPERATION :
+                    $response = new SabreAMF_AMF3_AcknowledgeMessage($request);
+                    break;
+                default :
+                    throw new Exception('Unknown CommandMessage operation: '  . $request->operation);
+
+            }
+            return $response;
 
         }
 
-        /**
-         * callService 
-         * 
-         * @param string $service Service name 
-         * @param string $method Method name
-         * @return void
-         */
-        protected function callService($service,$method) {
+        protected function invokeService($service,$method,$data) {
 
-            //TODO : Well i still need to do this part
+            if (is_callable($this->onInvokeService)) {
+                return call_user_func_array($this->onInvokeService,array($service,$method,$data));
+            } else {
+                throw new Exception('onInvokeService is not defined or not callable');
+            }
 
         }
 
+
         /**
-         * execute 
+         * exec
          * 
          * @return void
          */
-        public function execute() {
+        public function exec() {
 
             foreach($this->getRequests() as $request) {
 
-                $service = substr($request['target'],0,strrpos($request['target'],'.'));
-                $method  = substr(strrchr($request['target'],'.'),1);
-               
+                // Default AMFVersion
+                $AMFVersion = 0;
+
+                $response = null;
+
                 try {
-                    $data = $this->callService($service,$method);
+
+                    // See if we are dealing with the AMF3 messaging system
+                    if (is_object($request['data']) && $request['data'] instanceof SabreAMF_AMF3_AbstractMessage) {
+                        
+                        $AMFVersion = 3;
+                       
+                        // See if we are dealing with a CommandMessage
+                        if ($request['data'] instanceof SabreAMF_AMF3_CommandMessage) {
+
+                            // Handle the command message 
+                            $response = $this->handleCommandMessage($request['data']);
+                        }
+
+                        // Is this maybe a RemotingMessage ?
+                        if ($request['data'] instanceof SabreAMF_AMF3_RemotingMessage) {
+
+                            // Yes
+                            $response = new SabreAMF_AMF3_AcknowledgeMessage($request['data']);
+                            $response->body = $this->invokeService($request['data']->destination,$request['data']->operation,$request['data']->body);
+
+                        }
+
+                    } else {
+
+                        // We are dealing with AMF0
+                        $service = substr($request['target'],0,strrpos($request['target'],'.'));
+                        $method  = substr(strrchr($request['target'],'.'),1);
+                        
+                        $response = $this->invokeService($service,$method,$request['data']);
+
+                    }
+
                     $status = SabreAMF_Const::R_RESULT;
+
                 } catch (Exception $e) {
-                    $data = array(
-                        'description' => $e->getMessage(),
-                        'details'     => false,
-                        'line'        => $e->getLine(), 
-                        'code'        => $e->getCode(),
-                    );
+
+                    // We got an exception somewhere, ignore anything that has happened and send back
+                    // exception information
+                    
+
+                    switch($AMFVersion) {
+                        case 0 :
+                            $response = array(
+                                'description' => $e->getMessage(),
+                                'details'     => false,
+                                'line'        => $e->getLine(), 
+                                'code'        => $e->getCode(),
+                            );
+                            break;
+                        case 3 :
+                            $response = new SabreAMF_AMF3_ErrorMessage($request['data']);
+                            $response->faultString = $e->getMessage();
+                            $response->faultCode   = $e->getCode();
+                            break;
+
+                    }
                     $status = SabreAMF_Const::R_STATUS;
                 }
 
-                $this->setResponse($request['response'],$status,$data);
+                $this->setResponse($request['response'],$status,$response);
 
             }
             $this->sendResponse();

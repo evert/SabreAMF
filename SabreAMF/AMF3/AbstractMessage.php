@@ -60,6 +60,16 @@
          */
         public $timestamp;
 
+        public function generateRandomId() {
+
+            $SabreAMFID = '44445501';
+
+            $id = md5(microtime());
+
+            return $SabreAMFID . '-' . substr($id,0,4) . '-' . substr($id,4,4) . '-' . substr($id,8,12);
+
+        }
+
     }
 
 ?>
