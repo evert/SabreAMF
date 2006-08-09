@@ -1,7 +1,22 @@
 <?php
 
+    /**
+     * SabreAMF_AMF3_CommandMessage 
+     * 
+     * @uses SabreAMF
+     * @uses _AMF3_AbstractMessage
+     * @package 
+     * @version $Id$
+     * @copyright 2006 Rooftop Solutions
+     * @author Evert Pot <evert@rooftopsolutions.nl> 
+     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
+     */
+
     require_once 'SabreAMF/AMF3/AbstractMessage.php';
 
+    /**
+     * This class is used for service commands, like pinging the server
+     */
     class SabreAMF_AMF3_CommandMessage extends SabreAMF_AMF3_AbstractMessage {
 
         const SUBSCRIBE_OPERATION          = 0;
@@ -14,8 +29,25 @@
         const LOGOUT_OPERATION             = 9;
         const SESSION_INVALIDATE_OPERATION = 10;
 
+        /**
+         * operation 
+         * 
+         * @var int 
+         */
         public $operation;
+
+        /**
+         * messageRefType 
+         * 
+         * @var int 
+         */
         public $messageRefType;
+
+        /**
+         * correlationId 
+         * 
+         * @var string 
+         */
         public $correlationId;
 
     }
