@@ -7,6 +7,10 @@
      * AMF Server
      * 
      * This is the AMF0/AMF3 Server class. Use this class to construct a gateway for clients to connect to 
+     *
+     * The difference between this server class and the regular server, is that this server is aware of the
+     * AMF3 Messaging system, and there is no need to manually construct the AcknowledgeMessage classes.
+     * Also, the Ping message will be done for you.
      * 
      * @package SabreAMF 
      * @version $Id$

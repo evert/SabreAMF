@@ -33,9 +33,9 @@
          */
         private $outputStream;
         /**
-         * clientType 
-         * 
-         * @var int 
+         * clientType
+         *
+         * @var int
          */
         private $clientType=0;
         /**
@@ -71,7 +71,7 @@
 
             $this->outputStream = $stream;
             $stream->writeByte(0x00);
-            $stream->writeByte($this->clientType);
+            $stream->writeByte($this->encoding);
             $stream->writeInt(count($this->headers));
             
             foreach($this->headers as $header) {

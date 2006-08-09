@@ -42,7 +42,10 @@
                 if (!$type && is_float($data))   $type = SabreAMF_AMF3_Const::DT_NUMBER;
                 if (!$type && is_numeric($data)) $type = SabreAMF_AMF3_Const::DT_INTEGER;
                 if (!$type && is_string($data))  $type = SabreAMF_AMF3_Const::DT_STRING;
-                if (!$type && is_array($data))   $type = SabreAMF_AMF3_Const::DT_ARRAY;
+                if (!$type && is_array($data))   {
+                    $type = SabreAMF_AMF3_Const::DT_ARRAY;
+                    foreach($data as $k=>$v) if (!is_numeric($k)) $type = SabreAMF_AMF3_Const::DT_OBJECT; 
+                }
                 if (!$type && is_object($data)) {
                     $type = SabreAMF_AMF3_Const::DT_OBJECT;
                 }
@@ -92,9 +95,17 @@
 
             }
 
-            $refId = SabreAMF_AMF3_Const::ET_OBJ_INLINE | SabreAMF_AMF3_Const::ET_CLASS_INLINE | SabreAMF_AMF3_Const::ET_PROPSERIAL;
 
-            $refId = $refId | (count($data) << 4);
+            $refId = SabreAMF_AMF3_Const::ET_OBJ_INLINE | SabreAMF_AMF3_Const::ET_CLASS_INLINE; 
+           
+            $count=0;
+            foreach($data as $k=>$v) {
+                $count++;
+            }
+
+            //echo("bcount: " . $count . "\n");
+
+            $refId = $refId | ($count << 4);
 
             $this->writeInt($refId);
 
@@ -103,10 +114,14 @@
             foreach($data as $k=>$v) {
 
                 $this->writeString($k);
+
+            }
+            foreach($data as $k=>$v) {
+
                 $this->writeAMFData($v);
 
             }
-            $this->writeString('');
+            //$this->writeString('');
 
         }
 

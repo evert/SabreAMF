@@ -55,13 +55,16 @@
          * @param bool $dump 
          * @return void
          */
-        public function __construct($dump = false) {
+        public function __construct() {
 
-            $data = isset($GLOBALS['HTTP_RAW_POST_DATA'])?$GLOBALS['HTTP_RAW_POST_DATA']:false;
-
+            $handle = fopen('php://input','r');
+            $data='';
+            while(!feof($handle)) {
+                $data.=fread($handle,4096);
+            }
             if (!$data) throw new Exception('No valid AMF request received');
 
-            if ($dump) file_put_contents($dump.'/' . md5($data),$data);
+            //file_put_contents($dump.'/' . md5($data),$data);
 
             $this->amfInputStream = new SabreAMF_InputStream($data);
            
