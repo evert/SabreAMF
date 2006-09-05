@@ -93,7 +93,7 @@
 
                             // Yes
                             $response = new SabreAMF_AMF3_AcknowledgeMessage($request['data']);
-                            $response->body = $this->invokeService($request['data']->destination,$request['data']->operation,$request['data']->body);
+                            $response->body = $this->invokeService($request['data']->source,$request['data']->operation,$request['data']->body);
 
                         }
 
