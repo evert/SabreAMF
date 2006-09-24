@@ -1,12 +1,17 @@
-(c)2006 by Evert Pot (evert@collab.nl) 
+(c)2006 Rooftop Solutions (http://www.rooftopsolutions.nl) 
 
 Documentation can be found on http://www.osflash.org/sabreamf/
 
-For questions and bugreports, report to evert@collab.nl or the OSFlash mailinglist
+For questions and bugreports, report to evert@rooftopsolutions.nl or the OSFlash mailinglist
 
 SabreAMF is distributed under a BSD licence. Please check the LICENCE file for more information.
 
-Thanks to :
+Authors:
+Evert Pot (http://www.rooftopsolutions.nl)
+Karl von Randow (http://xk72.com/blog)
+Renaun Erickson (http://renaun.com/blog)
+
+Thanks to:
 
 Kevin Langdon, author of ServiceCapture for making the first big steps in decoding the AMF3 spec and helping out when i got stuck
 The AMFPHP team for their excellent piece of software.
