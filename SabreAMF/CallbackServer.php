@@ -6,6 +6,7 @@
     require_once('SabreAMF/AMF3/RemotingMessage.php');
     require_once('SabreAMF/AMF3/CommandMessage.php');
     require_once('SabreAMF/AMF3/ErrorMessage.php');
+    require_once('SabreAMF/DetailException.php');
 
     /**
      * AMF Server
@@ -113,13 +114,18 @@
 
                     // We got an exception somewhere, ignore anything that has happened and send back
                     // exception information
-                    
+
+                    if ($e instanceof SabreAMF_Exception) {
+                        $detail = $e->getDetail();
+                    } else {
+                        $detail = '';
+                    }
 
                     switch($AMFVersion) {
                         case 0 :
                             $response = array(
                                 'description' => $e->getMessage(),
-                                'details'     => false,
+                                'detail'      => $defail,
                                 'line'        => $e->getLine(), 
                                 'code'        => $e->getCode(),
                             );
@@ -128,6 +134,7 @@
                             $response = new SabreAMF_AMF3_ErrorMessage($request['data']);
                             $response->faultString = $e->getMessage();
                             $response->faultCode   = $e->getCode();
+                            $response->faultDetail = $detail;
                             break;
 
                     }
