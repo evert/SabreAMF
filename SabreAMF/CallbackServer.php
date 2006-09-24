@@ -125,7 +125,7 @@
                         case 0 :
                             $response = array(
                                 'description' => $e->getMessage(),
-                                'detail'      => $defail,
+                                'detail'      => $detail,
                                 'line'        => $e->getLine(), 
                                 'code'        => $e->getCode(),
                             );
