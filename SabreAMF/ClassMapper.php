@@ -87,7 +87,7 @@
             if (!class_exists($localClass)) {
                 throw new Exception('Class ' . $localClass . ' is not defined');
             }
-            return false;
+            return $localClass;
 
         }
 
