@@ -75,11 +75,11 @@
 
             $localClass = false;
             $cb = false;
-            if (is_callable(self::$onGetLocalClass)) {
+            $localClass=(isset(self::$maps[$remoteClass]))?self::$maps[$remoteClass]:false;
+            if (!$localClass && is_callable(self::$onGetLocalClass)) {
                 $cb = true;
                 $localClass = call_user_func(self::$onGetLocalClass,$remoteClass);
             }
-            if (!$localClass) $localClass=(isset(self::$maps[$remoteClass]))?self::$maps[$remoteClass]:false;
             if (!$localClass) return false;
             if (!is_string($localClass) && $cb) {
                 throw new Exception('Classname received from onGetLocalClass should be a string or return false. ' . gettype($localClass) . ' was returned');
@@ -103,11 +103,11 @@
 
             $remoteClass = false;
             $cb = false;
-            if (is_callable(self::$onGetRemoteClass)) {
+            $remoteClass = array_search($localClass,self::$maps);
+            if (!$remoteClass && is_callable(self::$onGetRemoteClass)) {
                 $cb = true;
                 $remoteClass = call_user_func(self::$onGetRemoteClass,$localClass);
             }
-            if (!$remoteClass) $remoteClass = array_search($localClass,self::$maps);
             if (!$remoteClass) return false;
             if (!is_string($remoteClass) && $cb) {
                 throw new Exception('Classname received from onGetLocalClass should be a string or return false. ' . gettype($localClass) . ' was returned');
