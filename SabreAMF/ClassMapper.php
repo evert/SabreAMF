@@ -105,7 +105,7 @@
             $cb = false;
             if (is_callable(self::$onGetRemoteClass)) {
                 $cb = true;
-                $remoteClass = call_user_func(self::$onGetRemotelass,$localClass);
+                $remoteClass = call_user_func(self::$onGetRemoteClass,$localClass);
             }
             if (!$remoteClass) $remoteClass = array_search($localClass,self::$maps);
             if (!$remoteClass) return false;
