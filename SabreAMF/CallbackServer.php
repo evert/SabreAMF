@@ -42,6 +42,10 @@
                 case SabreAMF_AMF3_CommandMessage::CLIENT_PING_OPERATION :
                     $response = new SabreAMF_AMF3_AcknowledgeMessage($request);
                     break;
+                case SabreAMF_AMF3_CommandMessage::LOGIN_OPERATION :
+                    $response = new SabreAMF_AMF3_AcknowlegdeMessage($request);
+                    $response->body = true;
+                    break;
                 default :
                     throw new Exception('Unknown CommandMessage operation: '  . $request->operation);
 
