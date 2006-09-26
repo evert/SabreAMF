@@ -101,7 +101,7 @@
          */
         static public function getRemoteClass($localClass) {
 
-            $localClass = false;
+            $remoteClass = false;
             $cb = false;
             if (is_callable(self::$onGetRemoteClass)) {
                 $cb = true;
