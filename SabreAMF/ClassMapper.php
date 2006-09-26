@@ -32,14 +32,14 @@
          *
          * @var callback
          */
-        static public $onLocalClass;
+        static public $onGetLocalClass;
 
         /**
          * Assign this callback to intercept calls to getRemoteClass
          *
          * @var callback
          */
-        static public $onRemoteClass;
+        static public $onGetRemoteClass;
 
         /**
          * The Constructor
@@ -73,8 +73,8 @@
          */
         static public function getLocalClass($remoteClass) {
 
-            if (is_callable(self::onGetLocalClass)) {
-                $localClass = call_user_func(self::onGetLocalClass,$remoteClass);
+            if (is_callable(self::$onGetLocalClass)) {
+                $localClass = call_user_func(self::$onGetLocalClass,$remoteClass);
                 if ($localClass) return $localClass;
             }
             return (isset(self::$maps[$remoteClass]))?self::$maps[$remoteClass]:false;
@@ -91,8 +91,8 @@
          */
         static public function getRemoteClass($localClass) {
 
-            if (is_callable(self::onGetRemoteClass)) {
-                $remoteClass = call_user_func(self::onGetRemotelass,$localClass);
+            if (is_callable(self::$onGetRemoteClass)) {
+                $remoteClass = call_user_func(self::$onGetRemotelass,$localClass);
                 if ($remoteClass) return $remoteClass;
             }
             return array_search($localClass,self::$maps);
