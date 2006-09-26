@@ -73,14 +73,14 @@
                 // Its an object
                 if (!$type && is_object($data)) {
 
+                    // If its an AMF3 wrapper.. we treat it as such
+                    if ($data instanceof SabreAMF_AMF3_Wrapper) $type = SabreAMF_AMF0_Const::DT_AMF3;
+
                     // We'll see if its registered in the classmapper
-                    if ($this->getRemoteClassName(get_class($data))) $type = SabreAMF_AMF0_Const::DT_TYPEDOBJECT;
+                    else if ($this->getRemoteClassName(get_class($data))) $type = SabreAMF_AMF0_Const::DT_TYPEDOBJECT;
 
                     // Otherwise.. check if it its an TypedObject
                     else if ($data instanceof SabreAMF_ITypedObject) $type = SabreAMF_AMF0_Const::DT_TYPEDOBJECT;
-
-                    // If its an AMF3 wrapper.. we treat it as such
-                    else if ($data instanceof SabreAMF_AMF3_Wrapper) $type = SabreAMF_AMF0_Const::DT_AMF3;
 
                     // If everything else fails, its a general object
                     else $type = SabreAMF_AMF0_Const::DT_OBJECT;
@@ -202,10 +202,10 @@
          * @param object $data 
          * @return void
          */
-        public function writeTypedObject(object $data) {
+        public function writeTypedObject($data) {
 
             if ($data instanceof SabreAMF_ITypedObject) {
-                $classname = $data->getAMFClassName();
+                    $classname = $data->getAMFClassName();
                 $data = $data->getAMFData();
             } else $classname = $this->getRemoteClass(get_class($data));
 
