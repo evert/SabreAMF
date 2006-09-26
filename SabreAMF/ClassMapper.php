@@ -73,11 +73,21 @@
          */
         static public function getLocalClass($remoteClass) {
 
+            $localClass = false;
+            $cb = false;
             if (is_callable(self::$onGetLocalClass)) {
+                $cb = true;
                 $localClass = call_user_func(self::$onGetLocalClass,$remoteClass);
-                if ($localClass) return $localClass;
             }
-            return (isset(self::$maps[$remoteClass]))?self::$maps[$remoteClass]:false;
+            if (!$localClass) $localClass=(isset(self::$maps[$remoteClass]))?self::$maps[$remoteClass]:false;
+            if (!$localClass) return false;
+            if (!is_string($localClass) && $cb) {
+                throw new Exception('Classname received from onGetLocalClass should be a string or return false. ' . gettype($localClass) . ' was returned');
+            }
+            if (!class_exists($localClass)) {
+                throw new Exception('Class ' . $localClass . ' is not defined');
+            }
+            return false;
 
         }
 
@@ -91,11 +101,18 @@
          */
         static public function getRemoteClass($localClass) {
 
+            $localClass = false;
+            $cb = false;
             if (is_callable(self::$onGetRemoteClass)) {
+                $cb = true;
                 $remoteClass = call_user_func(self::$onGetRemotelass,$localClass);
-                if ($remoteClass) return $remoteClass;
             }
-            return array_search($localClass,self::$maps);
+            if (!$remoteClass) $remoteClass = array_search($localClass,self::$maps);
+            if (!$remoteClass) return false;
+            if (!is_string($remoteClass) && $cb) {
+                throw new Exception('Classname received from onGetLocalClass should be a string or return false. ' . gettype($localClass) . ' was returned');
+            }
+            return $remoteClass; 
 
         }
 
