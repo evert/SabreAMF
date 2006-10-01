@@ -29,12 +29,25 @@
     class SabreAMF_CallbackServer extends SabreAMF_Server {
 
         /**
-         * onInvokeService
+         * Assign this callback to handle method-calls 
          *
          * @var callback
          */
         public $onInvokeService;
 
+        /**
+         * Assign this callback to handle authentication requests 
+         * 
+         * @var callback 
+         */
+        public $onAuthenticate;
+
+        /**
+         * handleCommandMessage 
+         * 
+         * @param SabreAMF_AMF3_CommandMessage $request 
+         * @return Sabre_AMF3_AbstractMessage 
+         */
         private function handleCommandMessage(SabreAMF_AMF3_CommandMessage $request) {
 
             switch($request->operation) {
@@ -43,17 +56,47 @@
                     $response = new SabreAMF_AMF3_AcknowledgeMessage($request);
                     break;
                 case SabreAMF_AMF3_CommandMessage::LOGIN_OPERATION :
+                    $authData = base64_decode($request->body);
+                    if ($authData) {
+                        $authData = explode(':',$authData,2);
+                        if (count($authData)==2) {
+                            $this->authenticate($authData[0],$authData[1]);
+                        }
+                    }
                     $response = new SabreAMF_AMF3_AcknowlegdeMessage($request);
                     $response->body = true;
                     break;
                 default :
-                    throw new Exception('Unknown CommandMessage operation: '  . $request->operation);
+                    throw new Exception('Unsupported CommandMessage operation: '  . $request->operation);
 
             }
             return $response;
 
         }
 
+        /**
+         * authenticate 
+         * 
+         * @param string $username 
+         * @param string $password 
+         * @return void
+         */
+        protected function authenticate($username,$password) {
+
+            if (is_callable($this->onAuthenticate)) {
+                call_user_func($this->onAuthenticate,$username,$password);
+            }
+
+        }
+
+        /**
+         * invokeService 
+         * 
+         * @param string $service 
+         * @param string $method 
+         * @param array $data 
+         * @return mixed 
+         */
         protected function invokeService($service,$method,$data) {
 
             if (is_callable($this->onInvokeService)) {
@@ -71,6 +114,21 @@
          * @return void
          */
         public function exec() {
+
+            // First we'll be looping through the headers to see if there's anything we reconize
+
+            foreach($this->getRequestHeaders() as $header) {
+
+                switch($header['name']) {
+
+                    // We found a credentials headers, calling the authenticate method
+                    case 'Credentials' :
+                        $this->authenticate($header['data']['userid'],$header['data']['password']);
+                        break;
+
+                }
+
+            }
 
             foreach($this->getRequests() as $request) {
 
