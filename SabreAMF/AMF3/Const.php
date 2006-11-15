@@ -24,6 +24,7 @@
         const DT_ARRAY       = 0x09;
         const DT_OBJECT      = 0x0A;
         const DT_XMLSTRING   = 0x0B;
+        const DT_BYTEARRAY   = 0x0C;
 
         const ET_OBJ_INLINE   = 0x01;
         const ET_CLASS_INLINE = 0x02;

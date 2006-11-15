@@ -4,6 +4,7 @@
     require_once 'SabreAMF/Const.php';
     require_once 'SabreAMF/TypedObject.php';
     require_once 'SabreAMF/Deserializer.php';
+    require_once 'SabreAMF/ByteArray.php';
 
 
     /**
@@ -15,6 +16,7 @@
      * @copyright 2006 Rooftop Solutions
      * @author Evert Pot <evert@collab.nl> 
      * @author Karl von Randow http://xk72.com/
+     * @author Jim Mischel
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
      * @uses SabreAMF_Const
      * @uses SabreAMF_AMF3_Const
@@ -70,6 +72,7 @@
                 case SabreAMF_AMF3_Const::DT_ARRAY      : return $this->readArray();
                 case SabreAMF_AMF3_Const::DT_OBJECT     : return $this->readObject();
                 case SabreAMF_AMF3_Const::DT_XMLSTRING  : return $this->readXMLString();
+                case SabreAMF_AMF3_Const::DT_BYTEARRAY  : return $this->readByteArray();
                 default                   :  throw new Exception('Unsupported type: 0x' . strtoupper(str_pad(dechex($settype),2,0,STR_PAD_LEFT))); return false;
 
 
@@ -241,11 +244,11 @@
                     throw new Exception('Undefined string reference: ' . $strref);
                     return false;
                 }
-                return $this->storedStrings[$strref >> 1];
+                return $this->storedStrings[$strref];
             } else {
                 $strlen = $strref >> 1; 
                 $str = $this->stream->readBuffer($strlen);
-                $this->storedStrings[] = $str;
+                if ($str != "") $this->storedStrings[] = $str;
                 return $str;
             }
 
@@ -267,6 +270,20 @@
 
         }
 
+        /**
+         * readString 
+         * 
+         * @return string 
+         */
+        public function readByteArray() {
+
+            $strref = $this->readInt();
+
+            $strlen = $strref >> 1; 
+            $str = $this->stream->readBuffer($strlen);
+            return new SabreAMF_ByteArray($str);
+
+        }
 
         /**
          * readInt 

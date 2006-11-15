@@ -4,7 +4,7 @@
     require_once 'SabreAMF/Const.php';
     require_once 'SabreAMF/Serializer.php';
     require_once 'SabreAMF/ITypedObject.php';
-
+    require_once 'SabreAMF/ByteArray.php';
 
     /**
      * SabreAMF_AMF3_Serializer 
@@ -47,7 +47,13 @@
                     foreach($data as $k=>$v) if (!is_numeric($k)) $type = SabreAMF_AMF3_Const::DT_OBJECT; 
                 }
                 if (!$type && is_object($data)) {
-                    $type = SabreAMF_AMF3_Const::DT_OBJECT;
+
+                    if ($data instanceof SabreAMF_ByteArray) {
+                        $type = SabreAMF_AMF3_Const::DT_BYTEARRAY;
+                    } else {
+                        $type = SabreAMF_AMF3_Const::DT_OBJECT;
+                    }
+
                 }
                 if ($type===false) {
                     throw new Exception('Unhandled data-type: ' . gettype($data));
@@ -70,6 +76,7 @@
                 case SabreAMF_AMF3_Const::DT_STRING      : $this->writeString($data); break;
                 case SabreAMF_AMF3_Const::DT_ARRAY       : $this->writeArray($data); break;
                 case SabreAMF_AMF3_Const::DT_OBJECT      : $this->writeObject($data); break; 
+                case SabreAMF_AMF3_Const::DT_BYTEARRAY   : $this->writeByteArray($data); break;
                 default                   :  throw new Exception('Unsupported type: ' . gettype($data)); return null; 
  
            }
@@ -153,6 +160,12 @@
                 if ($k<count($bytes)-1) $byte = $byte | 0x80;
                 $this->stream->writeByte($byte);
             }    
+
+        }
+
+        public function writeByteArray(SabreAMF_ByteArray $data) {
+
+            $this->writeString($data->getData());
 
         }
 
