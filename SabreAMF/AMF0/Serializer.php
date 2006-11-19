@@ -207,7 +207,7 @@
             if ($data instanceof SabreAMF_ITypedObject) {
                     $classname = $data->getAMFClassName();
                 $data = $data->getAMFData();
-            } else $classname = $this->getRemoteClass(get_class($data));
+            } else $classname = $this->getRemoteClassName(get_class($data));
 
             $this->writeString($classname);
             return $this->writeObject($data);
