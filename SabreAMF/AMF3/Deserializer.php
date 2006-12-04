@@ -5,7 +5,7 @@
     require_once 'SabreAMF/TypedObject.php';
     require_once 'SabreAMF/Deserializer.php';
     require_once 'SabreAMF/ByteArray.php';
-
+    require_once 'SabreAMF/Externalized.php';
 
     /**
      * SabreAMF_AMF3_Deserializer 
@@ -161,8 +161,12 @@
                 	break;
                 	case 1:
                 	{
-                		// One single value, no propertyname. Not sure what to do with this, so following ServiceCapture's example and naming the property 'source'
-                        $values["source"] = $this->readAMFData();
+                        // Externalized object
+                        if (is_object($obj) && $obj instanceof SabreAMF_Externalized) {
+                            $obj->readExternal($this->readAMFData());
+                        } else {
+                            $values['externalizedata'] = $this->readAMFData();
+                        }
                 	}
                 	break;
                 	case 0:
