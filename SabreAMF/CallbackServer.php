@@ -189,7 +189,7 @@
                                 'description' => $e->getMessage(),
                                 'detail'      => $detail,
                                 'line'        => $e->getLine(), 
-                                'code'        => $e->getCode(),
+                                'code'        => $e->getCode()?$e->getCode():get_class($e),
                             );
                             break;
                         case 3 :
