@@ -53,7 +53,7 @@
         public function &readBuffer($length) {
 
             if ($length+$this->cursor > strlen($this->rawData)) {
-                throw new Exception('Buffer underrun at position: '. $this->cursor . '. Trying to fetch '. $length . ' bytes');
+                throw new UnderflowException('Buffer underrun at position: '. $this->cursor . '. Trying to fetch '. $length . ' bytes');
                 return false;
             }
             $data = substr($this->rawData,$this->cursor,$length);
@@ -115,7 +115,20 @@
             $long = unpack("N",$block);
             return $long[1];
         }
-       
+
+        /**
+         * readInt24 
+         * 
+         * return int 
+         */
+        public function readInt24() {
+
+            $block = chr(0) . $this->readBuffer(3);
+            $long = unpack("N",$block);
+            return $long[1];
+
+        }
+
     }
 
 
