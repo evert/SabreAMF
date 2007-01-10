@@ -12,8 +12,8 @@
      * @package SabreAMF
      * @subpackage AMF3
      * @version $Id$
-     * @copyright 2006 Rooftop Solutions
-     * @author Evert Pot <evert@collab.nl> 
+     * @copyright 2006-2007 Rooftop Solutions
+     * @author Evert Pot (http://www.rooftopsolutions.nl) 
      * @author Karl von Randow http://xk72.com/
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
      * @uses SabreAMF_Const
@@ -90,7 +90,8 @@
          * @return void
          */
         public function writeObject($data) {
-
+           
+            $encodingType = SabreAMF_AMF3_Const::ET_PROPLIST;
             if ($data instanceof SabreAMF_ITypedObject) {
 
                 $classname = $data->getAMFClassName();
@@ -98,37 +99,56 @@
 
             } else if (!$classname = $this->getRemoteClassName(get_class($data))) {
 
+                
                 $classname = '';
 
-            }
+            } else {
 
+                if ($data instanceof SabreAMF_Externalized) {
 
-            $refId = SabreAMF_AMF3_Const::ET_OBJ_INLINE | SabreAMF_AMF3_Const::ET_CLASS_INLINE; 
-           
-            $count=0;
-            foreach($data as $k=>$v) {
-                $count++;
-            }
+                    $encodingType = SabreAMF_AMF3_Const::ET_EXTERNALIZED;
 
-            //echo("bcount: " . $count . "\n");
-
-            $refId = $refId | ($count << 4);
-
-            $this->writeInt($refId);
-
-            $this->writeString($classname);
-
-            foreach($data as $k=>$v) {
-
-                $this->writeString($k);
+                }
 
             }
-            foreach($data as $k=>$v) {
 
-                $this->writeAMFData($v);
 
+            $objectInfo = 0x03;
+            $objectInfo |= $encodingType << 2;
+
+            switch($encodingType) {
+
+                case SabreAMF_AMF3_Const::ET_PROPLIST :
+
+                    $propertyCount=0;
+                    foreach($data as $k=>$v) {
+                        $propertyCount++;
+                    }
+
+                    $objectInfo |= ($propertyCount << 4);
+
+
+                    $this->writeInt($objectInfo);
+                    $this->writeString($classname);
+                    foreach($data as $k=>$v) {
+
+                        $this->writeString($k);
+
+                    }
+                    foreach($data as $k=>$v) {
+
+                        $this->writeAMFData($v);
+
+                    }
+                    break;
+
+                case SabreAMF_AMF3_Const::ET_EXTERNALIZED :
+
+                    $this->writeInt($objectInfo);
+                    $this->writeString($classname);
+                    $this->writeAMFData($data->writeExternal());
+                    break;
             }
-            //$this->writeString('');
 
         }
 
