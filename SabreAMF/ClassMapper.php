@@ -26,7 +26,7 @@
             'flex.messaging.messages.CommandMessage'     => 'SabreAMF_AMF3_CommandMessage',
             'flex.messaging.messages.AcknowledgeMessage' => 'SabreAMF_AMF3_AcknowledgeMessage',
             'flex.messaging.messages.ErrorMessage'       => 'SabreAMF_AMF3_ErrorMessage',
-            'flex.messaging.io.ArrayCollection'          => 'SabreAMF_ArrayCollection';
+            'flex.messaging.io.ArrayCollection'          => 'SabreAMF_ArrayCollection'
         );
 
         /**
