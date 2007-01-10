@@ -5,8 +5,8 @@
      * 
      * @package SabreAMF 
      * @version $Id$
-     * @copyright 2006 Rooftop Solutions
-     * @author Evert Pot <evert@rooftopsolutions.nl> 
+     * @copyright 2006-2007 Rooftop Solutions
+     * @author Evert Pot (http://www.rooftopsolutions.nl) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
 
@@ -14,7 +14,8 @@
     require_once 'SabreAMF/AMF3/CommandMessage.php';
     require_once 'SabreAMF/AMF3/AcknowledgeMessage.php';
     require_once 'SabreAMF/AMF3/ErrorMessage.php';
-    
+    require_once 'SabreAMF/ArrayCollection.php';
+   
     final class SabreAMF_ClassMapper {
 
         /**
@@ -25,6 +26,7 @@
             'flex.messaging.messages.CommandMessage'     => 'SabreAMF_AMF3_CommandMessage',
             'flex.messaging.messages.AcknowledgeMessage' => 'SabreAMF_AMF3_AcknowledgeMessage',
             'flex.messaging.messages.ErrorMessage'       => 'SabreAMF_AMF3_ErrorMessage',
+            'flex.messaging.io.ArrayCollection'          => 'SabreAMF_ArrayCollection';
         );
 
         /**
