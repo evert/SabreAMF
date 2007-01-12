@@ -104,7 +104,11 @@
          */
         function offsetSet($offset,$value) {
 
-            $this->data[$offset] = $value;
+            if (!is_null($offset)) {
+                $this->data[$offset] = $value;
+            } else {
+                $this->data[] = $value;
+            }
 
         }
 
