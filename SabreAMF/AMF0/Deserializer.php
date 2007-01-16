@@ -217,7 +217,7 @@
         public function readAMF3Data() {
 
             if (!$this->amf3Deserializer) {
-                $this->amf3Deseralizer = new SabreAMF_AMF3_Deserializer($this->stream);
+                $this->amf3Deserializer = new SabreAMF_AMF3_Deserializer($this->stream);
             }
             return new SabreAMF_AMF3_Wrapper($this->amf3Deserializer->readAMFData());
 
