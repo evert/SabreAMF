@@ -32,6 +32,13 @@
         private $refList = array();
 
         /**
+         * amf3Deserializer 
+         * 
+         * @var SabreAMF_AMF3_Deserializer 
+         */
+        private $amf3Deserializer = null;
+
+        /**
          * readAMFData 
          * 
          * @param int $settype 
@@ -209,8 +216,10 @@
          */
         public function readAMF3Data() {
 
-            $deserializer = new SabreAMF_AMF3_Deserializer($this->stream);
-            return new SabreAMF_AMF3_Wrapper($deserializer->readAMFData());
+            if (!$this->amf3Deserializer) {
+                $this->amf3Deseralizer = new SabreAMF_AMF3_Deserializer($this->stream);
+            }
+            return new SabreAMF_AMF3_Wrapper($this->amf3Deserializer->readAMFData());
 
         }
 
