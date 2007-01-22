@@ -31,7 +31,7 @@
          * @param array $data pass an array here to populate the array collection 
          * @return void
          */
-        function __construct(array $data = null) {
+        function __construct($data = array()) {
 
             if ($data) $this->data = new ArrayObject($data);
 
