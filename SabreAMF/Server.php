@@ -57,11 +57,7 @@
          */
         public function __construct() {
 
-            $handle = fopen('php://input','r');
-            $data='';
-            while(!feof($handle)) {
-                $data.=fread($handle,4096);
-            }
+            $data = file_get_contents('php://input');
             if (!$data) throw new Exception('No valid AMF request received');
 
             //file_put_contents($dump.'/' . md5($data),$data);
