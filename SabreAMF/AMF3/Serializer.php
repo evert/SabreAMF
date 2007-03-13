@@ -15,6 +15,7 @@
      * @copyright 2006-2007 Rooftop Solutions
      * @author Evert Pot (http://www.rooftopsolutions.nl) 
      * @author Karl von Randow http://xk72.com/
+     * @author Develar
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
      * @uses SabreAMF_Const
      * @uses SabreAMF_AMF3_Const
@@ -160,26 +161,31 @@
          */
         public function writeInt($int) {
 
-            $count = 0;
             $bytes = array();
-            if (($int & 0xff000000) != 0) {
-            	$bytes[] = $int & 0xFF;
-            	for($i=0;$i<3;$i++) {
-	                $bytes[] = ($int >> (8 + 7*$i)) & 0x7F;
-	            }
+            if (($int & 0xff000000) == 0) {
+
+                for($i = 3; $i > -1; $i--) {
+                    $bytes[] = ($int >> (7 * $i)) & 0x7F;
+                }
+                
             } else {
-	            for($i=0;$i<4;$i++) {
-	                $bytes[] = ($int >> (7*$i)) & 0x7F;
-	            }
+
+                for ($i = 2; $i > -1; $i--) {
+                    $bytes[] = ($int >> (8 + 7 * $i)) & 0x7F;
+                }
+
+                $bytes[] = $int & 0xFF;
+
             }
-            $bytes = array_reverse($bytes);
-            while(count($bytes)>1 && $bytes[0] == 0) {
-                array_shift($bytes);
+            for($i = 0; $i < 3; $i++) {
+
+                if ($bytes[$i]>0) {
+
+                    $this->stream->writeByte($bytes[$i] | 0x80);
+
+                }
             }
-            foreach($bytes as $k=>$byte) {
-                if ($k<count($bytes)-1) $byte = $byte | 0x80;
-                $this->stream->writeByte($byte);
-            }    
+            $this->stream->writeByte($bytes[3]);
 
         }
 
