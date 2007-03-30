@@ -141,11 +141,30 @@
                 }
                    
 
-                switch($encodingType) {
+                if ($encodingType & SabreAMF_AMF3_Const::ET_EXTERNALIZED) {
 
-                    // This object is encoded as "properties first, then values"
-                    case SabreAMF_AMF3_Const::ET_PROPLIST :
+                    if (!$storedClass) {
+                        $this->storedClasses[] = array('className' => $className,'encodingType'=>$encodingType,'propertyNames'=>$propertyNames);
+                    }
+                    $properties['externalizedData'] = $this->readAMFData();
 
+                } else {
+
+                    if ($encodingType & SabreAMF_AMF3_Const::ET_SERIAL) {
+
+                        if (!$storedClass) {
+                            $this->storedClasses[] = array('className' => $className,'encodingType'=>$encodingType,'propertyNames'=>$propertyNames);
+                        }
+                        $properties = array();
+                        do {
+                            $propertyName = $this->readString();
+                            if ($propertyName!="") {
+                                $propertyNames[] = $propertyName;
+                                $properties[$propertyName] = $this->readAMFData();
+                            }
+                        } while ($propertyName!="");
+                        
+                    } else { 
                         if (!$storedClass) {
                             $propertyCount = $objInfo;
                             for($i=0;$i<$propertyCount;$i++) {
@@ -163,39 +182,11 @@
                             $properties[$propertyName] = $this->readAMFData();
 
                         }
-                        break;
-                  
-                    // This object is encoded as an 'externalized object'
-                    case SabreAMF_AMF3_Const::ET_EXTERNALIZED :
 
-                        if (!$storedClass) {
-                            $this->storedClasses[] = array('className' => $className,'encodingType'=>$encodingType,'propertyNames'=>$propertyNames);
-                        }
-                        $properties['externalizedData'] = $this->readAMFData();
-                        break;
-                    
-                    // This object is encoded as property-value pairs
-                    case SabreAMF_AMF3_Const::ET_SERIAL :
-                       
-                        if (!$storedClass) {
-                            $this->storedClasses[] = array('className' => $className,'encodingType'=>$encodingType,'propertyNames'=>$propertyNames);
-                        }
-                        $properties = array();
-                        do {
-                            $propertyName = $this->readString();
-                            if ($propertyName!="") {
-                                $propertyNames[] = $propertyName;
-                                $properties[$propertyName] = $this->readAMFData();
-                            }
-                        } while ($propertyName!="");
-                        
-                        break;
-                     
-                    default :
-                        throw new Exception('Encoding type: ' . $encodingType);
+                    }
 
                 }
-
+                    
                 //ClassMapping magic
 
                 if ($className) {
