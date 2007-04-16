@@ -23,7 +23,7 @@
          * 
          * @var array 
          */
-        private $data;
+        private $data; 
 
         /**
          * Construct this object 
@@ -33,7 +33,8 @@
          */
         function __construct($data = array()) {
 
-            if ($data) $this->data = new ArrayObject($data);
+            if (!$data) $data = array();
+            $this->data = new ArrayObject($data);
 
         }
 
