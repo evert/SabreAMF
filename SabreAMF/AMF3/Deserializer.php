@@ -98,7 +98,6 @@
             $storedObject = ($objInfo & 0x01)==0;
             $objInfo = $objInfo >> 1;
 
-
             if ($storedObject) {
 
                 $objectReference = $objInfo;
@@ -117,6 +116,7 @@
                 $storedClass = ($objInfo & 0x01)==0;
                 $objInfo= $objInfo >> 1;
 
+                // If this is a stored  class.. we have the info
                 if ($storedClass) {
                   
                     $classReference = $objInfo;
@@ -129,6 +129,7 @@
                         $encodingType = $this->storedClasses[$classReference]['encodingType'];
                         $propertyNames = $this->storedClasses[$classReference]['propertyNames'];
                         $className = $this->storedClasses[$classReference]['className'];
+
                     }
                   
                 } else { 
@@ -139,14 +140,40 @@
                     $objInfo = $objInfo >> 2;
 
                 }
-                   
+                  
+                //ClassMapping magic
+                if ($className) {
+
+                    if ($localClassName = SabreAMF_ClassMapper::getLocalClass($className)) {
+
+                        $rObject = new $localClassName();
+
+                    } else {
+
+                        $rObject = new SabreAMF_TypedObject($className,array());
+
+                    }
+                } else {
+
+                    $rObject = new STDClass(); 
+
+                }
+
+                $this->storedObjects[] =& $rObject;
 
                 if ($encodingType & SabreAMF_AMF3_Const::ET_EXTERNALIZED) {
 
                     if (!$storedClass) {
                         $this->storedClasses[] = array('className' => $className,'encodingType'=>$encodingType,'propertyNames'=>$propertyNames);
                     }
-                    $properties['externalizedData'] = $this->readAMFData();
+                    if ($rObject instanceof SabreAMF_Externalized) {
+                        $rObject->readExternal($this->readAMFData());
+                    } elseif ($rObject instanceof SabreAMF_TypedObject) {
+                        $rObject->setAMFData(array('externalizedData'=>$this->readAMFData()));
+                    } else {
+                        $rObject->externalizedData = $this->readAMFData();
+                    }
+                    //$properties['externalizedData'] = $this->readAMFData();
 
                 } else {
 
@@ -164,7 +191,8 @@
                             }
                         } while ($propertyName!="");
                         
-                    } else { 
+                        
+                    } else {
                         if (!$storedClass) {
                             $propertyCount = $objInfo;
                             for($i=0;$i<$propertyCount;$i++) {
@@ -175,7 +203,7 @@
                             $this->storedClasses[] = array('className' => $className,'encodingType'=>$encodingType,'propertyNames'=>$propertyNames);
 
                         }
-                        
+
                         $properties = array();
                         foreach($propertyNames as $propertyName) {
 
@@ -184,39 +212,14 @@
                         }
 
                     }
-
-                }
                     
-                //ClassMapping magic
-
-                if ($className) {
-
-                    if ($localClassName = SabreAMF_ClassMapper::getLocalClass($className)) {
-
-                        $rObject = new $localClassName();
-
-                        if ($encodingType==SabreAMF_AMF3_Const::ET_EXTERNALIZED && $rObject instanceof SabreAMF_Externalized) {
-
-                            $rObject->readExternal($properties['externalizedData']);
-
-                        } else {
-
-                            foreach($properties as $key=>$property) $rObject->$key = $property;
-
-                        }
-
+                    if ($rObject instanceof SabreAMF_TypedObject) {
+                        $rObject->setAMFData($properties);
                     } else {
-
-                        $rObject = new SabreAMF_TypedObject($className,$properties);
-
+                        foreach($properties as $k=>$v) if ($k) $rObject->$k = $v;
                     }
-                } else {
-
-                    $rObject = (object)$properties;
 
                 }
-
-                $this->storedObjects[] = $rObject;
 
             }
             return $rObject;
@@ -245,12 +248,12 @@
 
             $this->stream->readByte();
     
+            $this->storedObjects[] &= $data;
 
             for($i=0;$i<$arrId;$i++) {
                 $data[] = $this->readAMFData();
             }
 
-            $this->storedObjects[] = $data;
             return $data;
 
         }
