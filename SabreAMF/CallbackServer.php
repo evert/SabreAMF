@@ -63,7 +63,7 @@
                             $this->authenticate($authData[0],$authData[1]);
                         }
                     }
-                    $response = new SabreAMF_AMF3_AcknowlegdeMessage($request);
+                    $response = new SabreAMF_AMF3_AcknowledgeMessage($request);
                     $response->body = true;
                     break;
                 default :
