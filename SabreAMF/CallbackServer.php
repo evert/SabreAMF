@@ -177,7 +177,7 @@
                     // We got an exception somewhere, ignore anything that has happened and send back
                     // exception information
 
-                    if ($e instanceof SabreAMF_Exception) {
+                    if ($e instanceof SabreAMF_DetailException) {
                         $detail = $e->getDetail();
                     } else {
                         $detail = '';
