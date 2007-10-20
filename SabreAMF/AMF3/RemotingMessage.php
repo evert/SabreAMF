@@ -7,7 +7,7 @@
      * @package SabreAMF
      * @subpackage AMF3
      * @version $Id$
-     * @copyright 2006 Rooftop Solutions
+     * @copyright 2006-2007 Rooftop Solutions
      * @author Evert Pot <evert@rooftopsolutions.nl> 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
@@ -33,6 +33,22 @@
          */
         public $source;
 
+        /**
+         * Creates the object and generates some values 
+         * 
+         * @return void
+         */
+        public function __construct() {
+
+            $this->messageId = $this->generateRandomId();
+            $this->clientId = $this->generateRandomId();
+            $this->destination = null;
+            $this->body = null;
+            $this->timeToLive = 0;
+            $this->timestamp = time() . '00';
+            $this->headers = new STDClass();
+
+        }
     }
 
 ?>

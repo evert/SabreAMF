@@ -1,21 +1,24 @@
 <?php
 
 
-    require_once(dirname(__FILE__) . '/Message.php');
-    require_once(dirname(__FILE__) . '/OutputStream.php');
-    require_once(dirname(__FILE__) . '/InputStream.php');
- 
+    require_once 'SabreAMF/Message.php';
+    require_once 'SabreAMF/OutputStream.php';
+    require_once 'SabreAMF/InputStream.php';
+    require_once 'SabreAMF/Const.php';
+    require_once 'SabreAMF/AMF3/Wrapper.php';
+
     /**
      * AMF Client
      *
-     * Use this class to make a call to an AMF0/AMF3 Server 
+     * Use this class to make a calls to AMF0/AMF3 services. The class makes use of the curl http library, so make sure you have this installed.
+     *
+     * It sends AMF0 encoded data by default. Change the encoding to AMF3 with setEncoding. sendRequest calls the actual service 
      * 
      * @package SabreAMF
      * @version $Id$
-     * @copyright 2006 Rooftop Solutions
-     * @author Evert Pot <evert@collab.nl> 
+     * @copyright 2006-2007 Rooftop Solutions
+     * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License
-     * @link http://www.osflash.org/sabreamf
      * @example ../examples/client.php
      * @uses SabreAMF_Message
      * @uses SabreAMF_OutputStream
@@ -61,6 +64,13 @@
         private $amfResponse;
 
         /**
+         * encoding 
+         * 
+         * @var mixed
+         */
+        private $encoding = SabreAMF_Const::AMF0;
+
+        /**
          * __construct 
          * 
          * @param mixed $endPoint The url to the AMF gateway
@@ -86,15 +96,37 @@
          * @return mixed 
          */
         public function sendRequest($servicePath,$data) {
+           
+            // We're using the FLEX Messaging framework
+            if($this->encoding & SabreAMF_Const::FLEXMSG) {
 
-            $ch = curl_init($this->endPoint);
+
+                // Setting up the message
+                $message = new SabreAMF_AMF3_RemotingMessage();
+                $message->body = $data;
+
+                // We need to split serviceName.methodName into separate variables
+                $service = explode('.',$servicePath);
+                $method = array_pop($service);
+                $service = implode('.',$service);
+                $message->operation = $method; 
+                $message->source = $service;
+
+                $data = $message;
+            }
+
             $this->amfRequest->addBody(array(
-                'target'   => $servicePath,
+
+                // If we're using the flex messaging framework, target is specified as the string 'null'
+                'target'   => $this->encoding & SabreAMF_Const::FLEXMSG?'null':$servicePath,
                 'response' => '/1',
                 'data'     => $data
             ));
+
             $this->amfRequest->serialize($this->amfOutputStream);
 
+            // The curl request
+            $ch = curl_init($this->endPoint);
             curl_setopt($ch,CURLOPT_POST,1);
             curl_setopt($ch,CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch,CURLOPT_TIMEOUT,20);
@@ -186,6 +218,19 @@
 
 
             }
+
+        }
+
+        /**
+         * Change the AMF encoding (0 or 3) 
+         * 
+         * @param int $encoding 
+         * @return void
+         */
+        public function setEncoding($encoding) {
+
+            $this->encoding = $encoding;
+            $this->amfRequest->setEncoding($encoding & SabreAMF_Const::AMF3);
 
         }
 
