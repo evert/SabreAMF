@@ -161,13 +161,15 @@
                     'length'   => $stream->readLong(),
                     'data'     => $deserializer->readAMFData(null,true)
                 );
-              
              
-                if (is_array($body['data']) && $body['data'] instanceof SabreAMF_AMF3_Wrapper) {
+
+                if ($body['data'] instanceof SabreAMF_AMF3_Wrapper) {
                     $body['data'] = $body['data']->getData();
                     $this->encoding = SabreAMF_Const::AMF3;
                 }
                
+
+
                 $this->bodies[] = $body;    
 
             }
