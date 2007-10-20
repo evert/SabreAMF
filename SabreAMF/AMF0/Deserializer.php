@@ -182,8 +182,7 @@
             //if ($timezoneOffset > 720) $timezoneOffset = ((65536 - $timezoneOffset));
             //$timezoneOffset=($timezoneOffset * 60) - date('Z');
 
-            // nasty hack to create a date time object, based on a unix timestamp
-            $dateTime = new DateTime(date(DATE_ATOM,$timestamp));
+            $dateTime = new DateTime('@' . $timestamp);
             
             return $dateTime;
 

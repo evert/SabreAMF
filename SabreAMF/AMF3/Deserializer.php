@@ -371,8 +371,7 @@
 
             $timestamp = floor($this->stream->readDouble() / 1000);
 
-            // nasty hack to create a date time object, based on a unix timestamp
-            $dateTime = new DateTime(date(DATE_ATOM,$timestamp));
+            $dateTime = new DateTime('@' . $timestamp);
             
             $this->storedObjects[] = $dateTime;
             return $dateTime;
