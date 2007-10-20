@@ -174,12 +174,18 @@
          */
         public function readDate() {
 
+            // Unix timestamp in seconds. We strip the millisecond part
             $timestamp = floor($this->stream->readDouble() / 1000);
-            $timezoneOffset = $this->stream->readInt();
-            if ($timezoneOffset > 720) $timezoneOffset = ((65536 - $timezoneOffset));
-            $timezoneOffset=($timezoneOffset * 60) - date('Z');
-            return $timestamp + ($timezoneOffset);
 
+            // we are ignoring the timezone
+            $timezoneOffset = $this->stream->readInt();
+            //if ($timezoneOffset > 720) $timezoneOffset = ((65536 - $timezoneOffset));
+            //$timezoneOffset=($timezoneOffset * 60) - date('Z');
+
+            // nasty hack to create a date time object, based on a unix timestamp
+            $dateTime = new DateTime(date(DATE_ATOM,$timestamp));
+            
+            return $dateTime;
 
         }
 

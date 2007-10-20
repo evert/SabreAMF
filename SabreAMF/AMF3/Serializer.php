@@ -49,11 +49,13 @@
                 }
                 if (!$type && is_object($data)) {
 
-                    if ($data instanceof SabreAMF_ByteArray) {
+                    if ($data instanceof SabreAMF_ByteArray) 
                         $type = SabreAMF_AMF3_Const::DT_BYTEARRAY;
-                    } else {
+                    elseif ($data instanceof DateTime) 
+                        $type = SabreAMF_AMF3_Const::DT_DATE;
+                    else 
                         $type = SabreAMF_AMF3_Const::DT_OBJECT;
-                    }
+                    
 
                 }
                 if ($type===false) {
@@ -75,6 +77,7 @@
                 case SabreAMF_AMF3_Const::DT_INTEGER     : $this->writeInt($data); break;
                 case SabreAMF_AMF3_Const::DT_NUMBER      : $this->stream->writeDouble($data); break;
                 case SabreAMF_AMF3_Const::DT_STRING      : $this->writeString($data); break;
+                case SabreAMF_AMF3_Const::DT_DATE        : $this->writeDate($data); break;
                 case SabreAMF_AMF3_Const::DT_ARRAY       : $this->writeArray($data); break;
                 case SabreAMF_AMF3_Const::DT_OBJECT      : $this->writeObject($data); break; 
                 case SabreAMF_AMF3_Const::DT_BYTEARRAY   : $this->writeByteArray($data); break;
@@ -215,7 +218,7 @@
          * @param array $arr 
          * @return void
          */
-        public function writeArray($arr) {
+        public function writeArray(array $arr) {
 
             end($arr);
             $arrLen = count($arr); 
@@ -230,6 +233,19 @@
 
         }
         
+        /**
+         * Writes a date object 
+         * 
+         * @param DateTime $data 
+         * @return void
+         */
+        public function writeDate(DateTime $data) {
+
+            // We're always sending actual date objects, never references
+            $this->writeInt(0x01);
+            $this->stream->writeDouble($data->format('U')*1000);
+
+        }
 
     }
 

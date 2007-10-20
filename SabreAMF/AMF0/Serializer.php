@@ -76,6 +76,8 @@
                     // If its an AMF3 wrapper.. we treat it as such
                     if ($data instanceof SabreAMF_AMF3_Wrapper) $type = SabreAMF_AMF0_Const::DT_AMF3;
 
+                    else if ($data instanceof DateTime) $type = SabreAMF_AMF0_Const::DT_DATE;
+
                     // We'll see if its registered in the classmapper
                     else if ($this->getRemoteClassName(get_class($data))) $type = SabreAMF_AMF0_Const::DT_TYPEDOBJECT;
 
@@ -104,6 +106,7 @@
                 case SabreAMF_AMF0_Const::DT_NULL        : return true;
                 case SabreAMF_AMF0_Const::DT_MIXEDARRAY  : return $this->writeMixedArray($data);
                 case SabreAMF_AMF0_Const::DT_ARRAY       : return $this->writeArray($data);
+                case SabreAMF_AMF0_Const::DT_DATE        : return $this->writeDate($data);
                 case SabreAMF_AMF0_Const::DT_LONGSTRING  : return $this->writeLongString();
                 case SabreAMF_AMF0_Const::DT_TYPEDOBJECT : return $this->writeTypedObject($data);
                 case SabreAMF_AMF0_Const::DT_AMF3        : return $this->writeAMF3Data($data);
@@ -225,6 +228,18 @@
 
             $serializer = new SabreAMF_AMF3_Serializer($this->stream);
             return $serializer->writeAMFData($data->getData());
+
+        }
+
+        /**
+         * Writes a date object 
+         * 
+         * @param DateTime $data 
+         * @return void
+         */
+        public function writeDate(DateTime $data) {
+
+            $this->stream->writeDouble($data->format('U')*1000);
 
         }
 

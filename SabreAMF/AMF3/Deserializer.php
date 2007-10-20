@@ -296,7 +296,7 @@
 
             $strlen = $strref >> 1; 
             $str = $this->stream->readBuffer($strlen);
-            return $str;
+            return simplexml_load_string($str);
 
         }
 
@@ -368,14 +368,14 @@
                 }
                 return $this->storedObjects[$dateref];
             }
-            //$timeOffset = ($dateref >> 1) * 6000 * -1;
-            $ms = $this->stream->readDouble();
 
-            //$date = $ms-$timeOffset;
-            $date = $ms;
+            $timestamp = floor($this->stream->readDouble() / 1000);
+
+            // nasty hack to create a date time object, based on a unix timestamp
+            $dateTime = new DateTime(date(DATE_ATOM,$timestamp));
             
-            $this->storedObjects[] = $date;
-            return $date;
+            $this->storedObjects[] = $dateTime;
+            return $dateTime;
         }
  
 
