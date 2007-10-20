@@ -5,15 +5,14 @@
      * 
      * @package SabreAMF 
      * @version $Id$
-     * @copyright 2006 Rooftop Solutions
-     * @author Evert Pot <evert@collab.nl> 
+     * @copyright 2006-2007 Rooftop Solutions
+     * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
 
-    /**
-     * Including the ClassMapper
-     */
+
     require_once 'SabreAMF/ClassMapper.php';
+    require_once 'SabreAMF/OutputStream.php'; 
 
     /**
      * Abstract Serializer

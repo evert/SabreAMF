@@ -1,11 +1,11 @@
 <?php
 
-    require_once dirname(__FILE__) . '/Const.php';
-    require_once dirname(__FILE__) . '/../Const.php';
-    require_once dirname(__FILE__) . '/../Deserializer.php';
-    require_once dirname(__FILE__) . '/../AMF3/Deserializer.php';
-    require_once dirname(__FILE__) . '/../AMF3/Wrapper.php';
-    require_once dirname(__FILE__) . '/../TypedObject.php';
+    require_once 'SabreAMF/AMF0/Const.php';
+    require_once 'SabreAMF/Const.php';
+    require_once 'SabreAMF/Deserializer.php';
+    require_once 'SabreAMF/AMF3/Deserializer.php';
+    require_once 'SabreAMF/AMF3/Wrapper.php';
+    require_once 'SabreAMF/TypedObject.php';
 
     /**
      * SabreAMF_AMF0_Deserializer 
@@ -13,8 +13,8 @@
      * @package SabreAMF
      * @subpackage AMF0
      * @version $Id$
-     * @copyright 2006 Rooftop Solutions
-     * @author Evert Pot <evert@collab.nl> 
+     * @copyright 2006, 2007 Rooftop Solutions
+     * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      * @uses SabreAMF_Const
      * @uses SabreAMF_AMF0_Const

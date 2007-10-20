@@ -1,11 +1,11 @@
 <?php
 
-    require_once dirname(__FILE__) . '/Const.php';
-    require_once dirname(__FILE__) . '/../Const.php';
-    require_once dirname(__FILE__) . '/../Serializer.php';
-    require_once dirname(__FILE__) . '/../AMF3/Serializer.php';
-    require_once dirname(__FILE__) . '/../AMF3/Wrapper.php';
-    require_once dirname(__FILE__) . '/../ITypedObject.php';
+    require_once 'SabreAMF/AMF3/Const.php';
+    require_once 'SabreAMF/Const.php';
+    require_once 'SabreAMF/Serializer.php';
+    require_once 'SabreAMF/AMF3/Serializer.php';
+    require_once 'SabreAMF/AMF3/Wrapper.php';
+    require_once 'SabreAMF/ITypedObject.php';
 
     /**
      * SabreAMF_AMF0_Serializer 
@@ -13,8 +13,8 @@
      * @package SabreAMF
      * @subpackage AMF0
      * @version $Id$
-     * @copyright 2006 Rooftop Solutions
-     * @author Evert Pot <evert@collab.nl> 
+     * @copyright 2006-2007 Rooftop Solutions
+     * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
      * @uses SabreAMF_Const
      * @uses SabreAMF_AMF0_Const
@@ -241,6 +241,8 @@
 
             $this->stream->writeDouble($data->format('U')*1000);
 
+            // empty timezone
+            $this->stream->writeInt(0);
         }
 
     }
