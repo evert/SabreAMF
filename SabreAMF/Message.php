@@ -162,13 +162,13 @@
                     'data'     => $deserializer->readAMFData(null,true)
                 );
              
-
-                if ($body['data'] instanceof SabreAMF_AMF3_Wrapper) {
-                    $body['data'] = $body['data']->getData();
-                    $this->encoding = SabreAMF_Const::AMF3;
+                if (is_object($body['data']) instanceof SabreAMF_AMF3_Wrapper) {
+                     $body['data'] = $body['data']->getData();
+                     $this->encoding = SabreAMF_Const::AMF3;
+                } else if (isset($body['data'][0]) && is_object($body['data'][0]) && $body['data'][0] instanceof SabreAMF_AMF3_Wrapper) {
+                     $body['data'] = $body['data'][0]->getData();
+                     $this->encoding = SabreAMF_Const::AMF3;
                 }
-               
-
 
                 $this->bodies[] = $body;    
 
