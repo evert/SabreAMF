@@ -16,7 +16,7 @@
         /**
          * AC_Flash
          *
-         * Specifies FlashPlayer 5.0 - 8.0 client
+         * Specifies FlashPlayer 6.0 - 8.0 client
          */
         const AC_Flash    = 0;
 
