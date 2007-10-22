@@ -16,7 +16,7 @@
      * 
      * @package SabreAMF
      * @version $Id$
-     * @copyright 2006-2007 Rooftop Solutions
+     * @copyright Copyright (C) 2006, 2007 Rooftop Solutions. All rights reserved.
      * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License
      * @example ../examples/client.php
@@ -29,7 +29,7 @@
         /**
          * endPoint 
          * 
-         * @var mixed
+         * @var string 
          */
         private $endPoint;
         /**
@@ -41,39 +41,41 @@
         /**
          * amfInputStream 
          * 
-         * @var mixed
+         * @var SabreAMF_InputStream
          */
         private $amfInputStream;
         /**
          * amfOutputStream 
          * 
-         * @var mixed
+         * @var SabreAMF_OutputStream
          */
         private $amfOutputStream;
+
         /**
          * amfRequest 
          * 
-         * @var mixed
+         * @var SabreAMF_Message 
          */
         private $amfRequest;
+
         /**
          * amfResponse 
          * 
-         * @var mixed
+         * @var SabreAMF_Message 
          */
         private $amfResponse;
 
         /**
          * encoding 
          * 
-         * @var mixed
+         * @var int 
          */
         private $encoding = SabreAMF_Const::AMF0;
 
         /**
          * __construct 
          * 
-         * @param mixed $endPoint The url to the AMF gateway
+         * @param string $endPoint The url to the AMF gateway
          * @return void
          */
         public function __construct($endPoint) {
@@ -91,8 +93,8 @@
          *
          * sendRequest sends the request to the server. It expects the servicepath and methodname, and the parameters of the methodcall
          * 
-         * @param mixed $servicePath The servicepath (e.g.: myservice.mymethod)
-         * @param mixed $data The parameters you want to send
+         * @param string $servicePath The servicepath (e.g.: myservice.mymethod)
+         * @param array $data The parameters you want to send
          * @return mixed 
          */
         public function sendRequest($servicePath,$data) {
@@ -130,7 +132,7 @@
             curl_setopt($ch,CURLOPT_POST,1);
             curl_setopt($ch,CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch,CURLOPT_TIMEOUT,20);
-            curl_setopt($ch,CURLOPT_HTTPHEADER,array('Content-type: application/x-amf'));
+            curl_setopt($ch,CURLOPT_HTTPHEADER,array('Content-type: ' . SabreAMF_Const::MIMETYPE));
             curl_setopt($ch,CURLOPT_POSTFIELDS,$this->amfOutputStream->getRawData());
 			if ($this->httpProxy) {
 				curl_setopt($ch,CURLOPT_PROXY,$this->httpProxy);

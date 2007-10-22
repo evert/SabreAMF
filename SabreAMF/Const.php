@@ -70,6 +70,11 @@
          */
         const FLEXMSG = 16;
 
+        /**
+         * AMF HTTP Mimetype
+         */
+        const MIMETYPE = 'application/x-amf';
+
    }
 
 

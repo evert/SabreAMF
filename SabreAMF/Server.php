@@ -1,10 +1,10 @@
 <?php
 
-    require_once(dirname(__FILE__) . '/OutputStream.php');
-    require_once(dirname(__FILE__) . '/InputStream.php');
-    require_once(dirname(__FILE__) . '/Message.php');
-    require_once(dirname(__FILE__) . '/Const.php');
-
+    require_once 'SabreAMF/OutputStream.php';
+    require_once 'SabreAMF/InputStream.php';
+    require_once 'SabreAMF/Message.php';
+    require_once 'SabreAMF/Const.php';
+ 
 
     /**
      * AMF Server
@@ -13,8 +13,8 @@
      * 
      * @package SabreAMF 
      * @version $Id$
-     * @copyright 2006 Rooftop Solutions
-     * @author Evert Pot <evert@collab.nl> 
+     * @copyright 2006, 2007 Rooftop Solutions
+     * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
      * @uses SabreAMF_OutputStream
      * @uses SabreAMF_InputStream
@@ -123,7 +123,7 @@
          */
         public function sendResponse() {
 
-            header('Content-Type: application/x-amf');
+            header('Content-Type: ' . SabreAMF_Const::MIMETYPE);
             $this->amfResponse->setEncoding($this->amfRequest->getEncoding());
             $this->amfResponse->serialize($this->amfOutputStream);
             echo($this->amfOutputStream->getRawData());
