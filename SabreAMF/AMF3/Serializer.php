@@ -187,10 +187,11 @@
                 $bytes[] = $int & 0xFF;
 
             }
+            $fw = false;
             for($i = 0; $i < 3; $i++) {
 
-                if ($bytes[$i]>0) {
-
+                if ($fw || $bytes[$i]>0) {
+                    $fw = true;
                     $this->stream->writeByte($bytes[$i] | 0x80);
 
                 }
