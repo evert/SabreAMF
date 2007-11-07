@@ -39,7 +39,14 @@
                if (!$type && is_bool($data))    {
                     $type = $data?SabreAMF_AMF3_Const::DT_BOOL_TRUE:SabreAMF_AMF3_Const::DT_BOOL_FALSE;
                 }
-                if (!$type && is_int($data))     $type = SabreAMF_AMF3_Const::DT_INTEGER;
+                if (!$type && is_int($data)) {
+                    // We essentially only got 29 bits for integers
+                    if ($data > 0xFFFFFFF || $data < -268435456) {
+                        $type = SabreAMF_AMF3_Const::DT_NUMBER;
+                    } else {
+                        $type = SabreAMF_AMF3_Const::DT_INTEGER;
+                    }
+                }
                 if (!$type && is_float($data))   $type = SabreAMF_AMF3_Const::DT_NUMBER;
                 if (!$type && is_numeric($data)) $type = SabreAMF_AMF3_Const::DT_INTEGER;
                 if (!$type && is_string($data))  $type = SabreAMF_AMF3_Const::DT_STRING;
