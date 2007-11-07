@@ -69,7 +69,7 @@
              <mapping name="deps">
                 <element>
                     <element key="type" value="php" />
-                    <element key="version" value="5.0.4" />
+                    <element key="version" value="5.2.0" />
                     <element key="rel" value="ge" />
                 </element>
              </mapping>
