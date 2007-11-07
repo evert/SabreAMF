@@ -225,7 +225,7 @@
          
             $arrId = ($arrLen << 1) | 0x01;
             $this->writeInt($arrId);
-            $this->writeInt(0); // Not sure what this is 
+            $this->writeString("");
            
             foreach($arr as $v) {
                 $this->writeAMFData($v);
