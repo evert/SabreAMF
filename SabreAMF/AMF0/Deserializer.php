@@ -13,7 +13,7 @@
      * @package SabreAMF
      * @subpackage AMF0
      * @version $Id$
-     * @copyright 2006, 2007 Rooftop Solutions
+     * @copyright Copyright (C) 2006, 2007 Rooftop Solutions. All rights reserved.
      * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      * @uses SabreAMF_Const

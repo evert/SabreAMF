@@ -6,8 +6,8 @@
      * @package SabreAMF
      * @subpackage AMF3
      * @version $Id$
-     * @copyright 2006-2007 Rooftop Solutions
-     * @author Evert Pot (http://www.rooftopsolutions.nl) 
+     * @copyright Copyright (C) 2006, 2007 Rooftop Solutions. All rights reserved.
+     * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
     final class SabreAMF_AMF3_Const {

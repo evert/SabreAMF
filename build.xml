@@ -52,7 +52,7 @@
     <target name="pearpkg" depends="prepare, build, buildexamples">
         <pearpkg name="SabreAMF" dir="${BUILDDIR}" destFile="${BUILDDIR}/package.xml">
             <fileset refid="pkgfiles" />
-            <option name="notes">This is a alpha-prerelease</option>
+            <option name="notes">This is a beta release. The API is now considered stable, and won't go through further changes till a next major release.</option>
             <option name="description">SabreAMF is a Flash Remoting server/client. SabreAMF supports both the AMF0 and AMF3 protocols</option>
             <option name="summary">SabreAMF is a Flash Remoting server/client, supporting AMF0 and AMF3 protocols</option>
             <option name="version" value="1.0.${svn.lastrevision}" />
