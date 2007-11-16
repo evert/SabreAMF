@@ -107,7 +107,7 @@
 
                 } else {
 
-                    $rObject = $this->storedObject[$objectReference];
+                    $rObject = $this->storedObjects[$objectReference];
 
                 }
 
