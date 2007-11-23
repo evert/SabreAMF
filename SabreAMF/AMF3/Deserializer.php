@@ -244,11 +244,16 @@
             }
             $arrId = $arrId >> 1;
             
+            $this->storedObjects[] &= $data;
+
             $data = array();
 
-            $this->stream->readByte();
-    
-            $this->storedObjects[] &= $data;
+            $key = $this->readString();
+
+            while($key!="") {
+                $data[$key] = $this->readAMFData();
+                $key = $this->readString();
+            }
 
             for($i=0;$i<$arrId;$i++) {
                 $data[] = $this->readAMFData();
