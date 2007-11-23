@@ -50,10 +50,7 @@
                 if (!$type && is_float($data))   $type = SabreAMF_AMF3_Const::DT_NUMBER;
                 if (!$type && is_numeric($data)) $type = SabreAMF_AMF3_Const::DT_INTEGER;
                 if (!$type && is_string($data))  $type = SabreAMF_AMF3_Const::DT_STRING;
-                if (!$type && is_array($data))   {
-                    $type = SabreAMF_AMF3_Const::DT_ARRAY;
-                    foreach($data as $k=>$v) if (!is_numeric($k)) $type = SabreAMF_AMF3_Const::DT_OBJECT; 
-                }
+                if (!$type && is_array($data))   $type = SabreAMF_AMF3_Const::DT_ARRAY; 
                 if (!$type && is_object($data)) {
 
                     if ($data instanceof SabreAMF_ByteArray) 
@@ -229,13 +226,29 @@
         public function writeArray(array $arr) {
 
             end($arr);
-            $arrLen = count($arr); 
-         
+
+            // We need to split up strings an numeric array keys
+            $num = array();
+            $string = array();
+            foreach($arr as $k=>$v) {
+                if (is_int($k)) $num[] = $v; else $string[$k] = $v;
+            }
+
+            unset($arr);
+
+            // Writing the length for the numeric keys in the array
+            $arrLen = count($num); 
             $arrId = ($arrLen << 1) | 0x01;
+
             $this->writeInt($arrId);
+
+            foreach($string as $key=>$v) {
+                $this->writeString($key);
+                $this->writeAMFData($v);
+            }
             $this->writeString("");
            
-            foreach($arr as $v) {
+            foreach($num as $v) {
                 $this->writeAMFData($v);
             }
 
