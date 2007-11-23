@@ -244,9 +244,8 @@
             }
             $arrId = $arrId >> 1;
             
-            $this->storedObjects[] &= $data;
-
             $data = array();
+            $this->storedObjects[] &= $data;
 
             $key = $this->readString();
 
