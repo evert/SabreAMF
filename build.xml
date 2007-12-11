@@ -52,17 +52,17 @@
     <target name="pearpkg" depends="prepare, build, buildexamples">
         <pearpkg name="SabreAMF" dir="${BUILDDIR}" destFile="${BUILDDIR}/package.xml">
             <fileset refid="pkgfiles" />
-            <option name="notes">This is a beta release. The API is now considered stable, and won't go through further changes till a next major release.</option>
+            <option name="notes">Stable release.</option>
             <option name="description">SabreAMF is a Flash Remoting server/client. SabreAMF supports both the AMF0 and AMF3 protocols</option>
             <option name="summary">SabreAMF is a Flash Remoting server/client, supporting AMF0 and AMF3 protocols</option>
             <option name="version" value="1.0.${svn.lastrevision}" />
-            <option name="state" value="beta" />
+            <option name="state" value="stable" />
             <option name="licence" value="BSD" />
             <mapping name="maintainers">
                 <element>
                     <element key="handle" value="evert" />
                     <element key="name" value="Evert Pot" />
-                    <element key="email" value="evert@collab.nl" />
+                    <element key="email" value="evert@rooftopsolutions.nl" />
                     <element key="role" value="lead" />
                 </element>
              </mapping>

@@ -1,8 +1,9 @@
+SabreAMF v1.0
+
 Copyright (C) 2006, 2007 Rooftop Solutions. All rights reserved.
 
-Documentation can be found on http://www.osflash.org/sabreamf/
-
-For questions and bugreports, report to evert@rooftopsolutions.nl or the OSFlash mailinglist
+Documentation, bug reports, downloads:
+http://code.google.com/p/sabreamf/
 
 SabreAMF is distributed under a BSD licence. Please check the LICENCE file for more information.
 
@@ -15,4 +16,4 @@ Thanks to:
 
 Kevin Langdon, author of ServiceCapture for making the first big steps in decoding the AMF3 spec and helping out when i got stuck
 The AMFPHP team for their excellent piece of software.
-The OSFlash community for opening up the Flash Player.
+The OSFlash community for opening up the Flash Platform. 
