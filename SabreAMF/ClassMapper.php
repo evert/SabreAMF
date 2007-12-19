@@ -112,7 +112,7 @@
             }
             if (!$remoteClass) return false;
             if (!is_string($remoteClass) && $cb) {
-                throw new Exception('Classname received from onGetLocalClass should be a string or return false. ' . gettype($localClass) . ' was returned');
+                throw new Exception('Classname received from onGetRemoteClass should be a string or return false. ' . gettype($remoteClass) . ' was returned');
             }
             return $remoteClass; 
 
