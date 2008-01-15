@@ -12,7 +12,7 @@
      * @package SabreAMF
      * @subpackage AMF3
      * @version $Id$
-     * @copyright Copyright (C) 2006, 2007 Rooftop Solutions. All rights reserved.
+     * @copyright Copyright (C) 2006-2008 Rooftop Solutions. All rights reserved.
      * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @author Karl von Randow http://xk72.com/
      * @author Develar
@@ -48,7 +48,7 @@
                     }
                 }
                 if (!$type && is_float($data))   $type = SabreAMF_AMF3_Const::DT_NUMBER;
-                if (!$type && is_numeric($data)) $type = SabreAMF_AMF3_Const::DT_INTEGER;
+                if (!$type && is_int($data))     $type = SabreAMF_AMF3_Const::DT_INTEGER;
                 if (!$type && is_string($data))  $type = SabreAMF_AMF3_Const::DT_STRING;
                 if (!$type && is_array($data))   $type = SabreAMF_AMF3_Const::DT_ARRAY; 
                 if (!$type && is_object($data)) {
