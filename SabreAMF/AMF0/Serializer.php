@@ -13,7 +13,7 @@
      * @package SabreAMF
      * @subpackage AMF0
      * @version $Id$
-     * @copyright Copyright (C) 2006, 2007 Rooftop Solutions. All rights reserved.
+     * @copyright Copyright (C) 2006-2008 Rooftop Solutions. All rights reserved.
      * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
      * @uses SabreAMF_Const
@@ -44,7 +44,7 @@
                 if (!$type && is_bool($data))    $type = SabreAMF_AMF0_Const::DT_BOOL;
 
                 // Number
-                if (!$type && is_numeric($data)) $type = SabreAMF_AMF0_Const::DT_NUMBER;
+                if (!$type && (is_int($data) || is_float($data))) $type = SabreAMF_AMF0_Const::DT_NUMBER;
 
                 // String (a long one)
                 if (!$type && is_string($data) && strlen($data)>65536) $type = SabreAMF_Const::DT_LONGSTRING;
