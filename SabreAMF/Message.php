@@ -21,18 +21,6 @@
     class SabreAMF_Message {
 
         /**
-         * inputStream 
-         * 
-         * @var SabreAMF_InputStream 
-         */
-        private $inputStream;
-        /**
-         * outputStream 
-         * 
-         * @var SabreAMF_OutputStream 
-         */
-        private $outputStream;
-        /**
          * clientType
          *
          * @var int
