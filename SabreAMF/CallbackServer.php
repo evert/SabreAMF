@@ -1,12 +1,12 @@
 <?php
 
-    require_once('SabreAMF/Server.php');
-    require_once('SabreAMF/AMF3/AbstractMessage.php');
-    require_once('SabreAMF/AMF3/AcknowledgeMessage.php');
-    require_once('SabreAMF/AMF3/RemotingMessage.php');
-    require_once('SabreAMF/AMF3/CommandMessage.php');
-    require_once('SabreAMF/AMF3/ErrorMessage.php');
-    require_once('SabreAMF/DetailException.php');
+    require_once 'SabreAMF/Server.php';
+    require_once 'SabreAMF/AMF3/AbstractMessage.php';
+    require_once 'SabreAMF/AMF3/AcknowledgeMessage.php';
+    require_once 'SabreAMF/AMF3/RemotingMessage.php';
+    require_once 'SabreAMF/AMF3/CommandMessage.php';
+    require_once 'SabreAMF/AMF3/ErrorMessage.php';
+    require_once 'SabreAMF/DetailException.php';
 
     /**
      * AMF Server
@@ -19,7 +19,7 @@
      * 
      * @package SabreAMF 
      * @version $Id$
-     * @copyright Copyright (C) 2006, 2007 Rooftop Solutions. All rights reserved.
+     * @copyright Copyright (C) 2006-2008 Rooftop Solutions. All rights reserved.
      * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
      * @uses SabreAMF_Server
@@ -184,7 +184,7 @@
                     }
 
                     switch($AMFVersion) {
-                        case 0 :
+                        case SabreAMF_Const::AMF0 :
                             $response = array(
                                 'description' => $e->getMessage(),
                                 'detail'      => $detail,
@@ -192,7 +192,7 @@
                                 'code'        => $e->getCode()?$e->getCode():get_class($e),
                             );
                             break;
-                        case 3 :
+                        case SabreAMF_Const::AMF3 :
                             $response = new SabreAMF_AMF3_ErrorMessage($request['data']);
                             $response->faultString = $e->getMessage();
                             $response->faultCode   = $e->getCode();
