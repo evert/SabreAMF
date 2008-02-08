@@ -23,8 +23,6 @@
      */
     class SabreAMF_AMF3_Serializer extends SabreAMF_Serializer {
 
-		public $m_useOldAlgorithm = false;
-
         /**
          * writeAMFData 
          * 
@@ -170,13 +168,11 @@
          */
         public function writeInt($int) {
 
-			// Note that this is simply a sanity check of the conversion algorithm;
-			// when live this sanity check should be disabled (overflow check handled in this.writeAMFData).
-			/*if ( ( ( $int & 0x70000000 ) != 0 ) && ( ( $int & 0x80000000 ) == 0 ) )
-				throw new Exception ( 'Integer overflow during Int32 to AMF3 conversion' );*/
+				// Note that this is simply a sanity check of the conversion algorithm;
+				// when live this sanity check should be disabled (overflow check handled in this.writeAMFData).
+				/*if ( ( ( $int & 0x70000000 ) != 0 ) && ( ( $int & 0x80000000 ) == 0 ) )
+					throw new Exception ( 'Integer overflow during Int32 to AMF3 conversion' );*/
 
-			if ( !$this->m_useOldAlgorithm )
-			{
 				if ( ( $int & 0xffffff80 ) == 0 )
 				{
 					$this->stream->writeByte ( $int & 0x7f );
@@ -207,35 +203,6 @@
 				$this->stream->writeByte ( $int & 0xff );
 
 				return;
-			}
-
-            $bytes = array();
-            if (($int & 0xff000000) == 0) {
-
-                for($i = 3; $i > -1; $i--) {
-                    $bytes[] = ($int >> (7 * $i)) & 0x7F;
-                }
-                
-            } else {
-
-                for ($i = 2; $i > -1; $i--) {
-                    $bytes[] = ($int >> (8 + 7 * $i)) & 0x7F;
-                }
-
-                $bytes[] = $int & 0xFF;
-
-            }
-            $fw = false;
-            for($i = 0; $i < 3; $i++) {
-
-                if ($fw || $bytes[$i]>0) {
-                    $fw = true;
-                    $this->stream->writeByte($bytes[$i] | 0x80);
-
-                }
-            }
-            $this->stream->writeByte($bytes[3]);
-
         }
 
         public function writeByteArray(SabreAMF_ByteArray $data) {
