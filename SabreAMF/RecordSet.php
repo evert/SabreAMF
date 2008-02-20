@@ -1,19 +1,19 @@
 <?php
 
-    require_once dirname(__FILE__) . '/TypedObject.php'; 
+    require_once 'SabreAMF/ITypedObject.php'; 
  
     /**
      * SabreAMF_RecordSet 
      * 
-     * @uses SabreAMF_TypedObject
+     * @uses SabreAMF_ITypedObject
      * @uses Countable
      * @package SabreAMF 
      * @version $Id$
-     * @copyright Copyright (C) 2006, 2007 Rooftop Solutions. All rights reserved.
+     * @copyright Copyright (C) 2006-2008 Rooftop Solutions. All rights reserved.
      * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
      */
-    abstract class SabreAMF_RecordSet implements SabreAMF_TypedObject, Countable {
+    abstract class SabreAMF_RecordSet implements SabreAMF_ITypedObject, Countable {
 
 
         /**
