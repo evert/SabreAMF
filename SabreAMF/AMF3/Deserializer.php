@@ -331,7 +331,7 @@
 
             $byte = $this->stream->readByte();
 
-			while((($byte & 0x80) != 0) && $count < 4) {
+    		while((($byte & 0x80) != 0) && $count < 4) {
                 $int <<= 7;
                 $int |= ($byte & 0x7f);
                 $byte = $this->stream->readByte();
@@ -339,18 +339,18 @@
             }
             
             if ($count < 4) {
-            	$int <<= 7;
-            	$int |= $byte;
+                $int <<= 7;
+                $int |= $byte;
             } else {
-            	// Use all 8 bits from the 4th byte
-            	$int <<= 8;
-            	$int |= $byte;
-            	
-            	// Check if the integer should be negative
-            	if (($int & 0x10000000) != 0) {
-            		// and extend the sign bit
-            		$int |= 0xe0000000;
-            	}
+                // Use all 8 bits from the 4th byte
+                $int <<= 8;
+                $int |= $byte;
+                
+                // Check if the integer should be negative
+                if (($int & 0x10000000) != 0) {
+                	// and extend the sign bit
+                	$int |= 0xe0000000;
+                }
             }
             
             return $int;

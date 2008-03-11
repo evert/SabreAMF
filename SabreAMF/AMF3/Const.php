@@ -12,7 +12,7 @@
      */
     final class SabreAMF_AMF3_Const {
 
-		const DT_UNDEFINED   = 0x00;
+    	const DT_UNDEFINED   = 0x00;
         const DT_NULL        = 0x01;
         const DT_BOOL_FALSE  = 0x02;
         const DT_BOOL_TRUE   = 0x03;

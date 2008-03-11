@@ -23,17 +23,17 @@
      */
     class SabreAMF_ClassNotFoundException extends Exception implements SabreAMF_DetailException {
 
-		/**
-		 *	Constructor
-		 */
-		public function __construct( $classname ) {
-			// Specific message to ClassException
-			$this->message = "Could not locate class " . $classname;
-			$this->code = "Server.Processing";
+    	/**
+    	 *	Constructor
+    	 */
+    	public function __construct( $classname ) {
+    		// Specific message to ClassException
+    		$this->message = "Could not locate class " . $classname;
+    		$this->code = "Server.Processing";
 
-			// Call parent class constructor
-			parent::__construct( $this->message );
-		}
+    		// Call parent class constructor
+    		parent::__construct( $this->message );
+    	}
 
         public function getDetail() {
 

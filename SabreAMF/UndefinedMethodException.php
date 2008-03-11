@@ -23,18 +23,18 @@
      */
     class SabreAMF_UndefinedMethodException extends Exception Implements SabreAMF_DetailException {
 
-		/**
-		 *	Constructor
-		 */
-		public function __construct( $class, $method ) {
-			// Specific message to MethodException
-			$this->message = "Undefined method '$method' in class $class";
-			$this->code = "Server.Processing";
+    	/**
+    	 *	Constructor
+    	 */
+    	public function __construct( $class, $method ) {
+    		// Specific message to MethodException
+    		$this->message = "Undefined method '$method' in class $class";
+    		$this->code = "Server.Processing";
 
-			// Call parent class constructor
-			parent::__construct( $this->message );
-			
-		}
+    		// Call parent class constructor
+    		parent::__construct( $this->message );
+    		
+    	}
 
         public function getDetail() {
 

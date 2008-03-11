@@ -134,9 +134,9 @@
             curl_setopt($ch,CURLOPT_TIMEOUT,20);
             curl_setopt($ch,CURLOPT_HTTPHEADER,array('Content-type: ' . SabreAMF_Const::MIMETYPE));
             curl_setopt($ch,CURLOPT_POSTFIELDS,$this->amfOutputStream->getRawData());
-			if ($this->httpProxy) {
-				curl_setopt($ch,CURLOPT_PROXY,$this->httpProxy);
-			}
+    		if ($this->httpProxy) {
+    			curl_setopt($ch,CURLOPT_PROXY,$this->httpProxy);
+    		}
             $result = curl_exec($ch);
  
             if (curl_errno($ch)) {
@@ -196,7 +196,7 @@
          * @return void
          */
         public function setHttpProxy($httpProxy) {
-        	$this->httpProxy = $httpProxy;
+            $this->httpProxy = $httpProxy;
         }
 
         /**

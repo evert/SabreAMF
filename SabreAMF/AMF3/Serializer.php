@@ -67,7 +67,7 @@
                     return null;
                 }
                 if ($type == SabreAMF_AMF3_Const::DT_INTEGER && ($data > 268435455 || $data < -268435456)) {
-                	$type = SabreAMF_AMF3_Const::DT_NUMBER;
+                    $type = SabreAMF_AMF3_Const::DT_NUMBER;
                 }
            } else $type = $forcetype;
 
@@ -168,41 +168,41 @@
          */
         public function writeInt($int) {
 
-				// Note that this is simply a sanity check of the conversion algorithm;
-				// when live this sanity check should be disabled (overflow check handled in this.writeAMFData).
-				/*if ( ( ( $int & 0x70000000 ) != 0 ) && ( ( $int & 0x80000000 ) == 0 ) )
-					throw new Exception ( 'Integer overflow during Int32 to AMF3 conversion' );*/
+    			// Note that this is simply a sanity check of the conversion algorithm;
+    			// when live this sanity check should be disabled (overflow check handled in this.writeAMFData).
+    			/*if ( ( ( $int & 0x70000000 ) != 0 ) && ( ( $int & 0x80000000 ) == 0 ) )
+    				throw new Exception ( 'Integer overflow during Int32 to AMF3 conversion' );*/
 
-				if ( ( $int & 0xffffff80 ) == 0 )
-				{
-					$this->stream->writeByte ( $int & 0x7f );
+    			if ( ( $int & 0xffffff80 ) == 0 )
+    			{
+    				$this->stream->writeByte ( $int & 0x7f );
 
-					return;
-				}
+    				return;
+    			}
 
-				if ( ( $int & 0xffffc000 ) == 0 )
-				{
-					$this->stream->writeByte ( ( $int >> 7 ) | 0x80 );
-					$this->stream->writeByte ( $int & 0x7f );
+    			if ( ( $int & 0xffffc000 ) == 0 )
+    			{
+    				$this->stream->writeByte ( ( $int >> 7 ) | 0x80 );
+    				$this->stream->writeByte ( $int & 0x7f );
 
-					return;
-				}
+    				return;
+    			}
 
-				if ( ( $int & 0xffe00000 ) == 0 )
-				{
-					$this->stream->writeByte ( ( $int >> 14 ) | 0x80 );
-					$this->stream->writeByte ( ( $int >> 7 ) | 0x80 );
-					$this->stream->writeByte ( $int & 0x7f );
+    			if ( ( $int & 0xffe00000 ) == 0 )
+    			{
+    				$this->stream->writeByte ( ( $int >> 14 ) | 0x80 );
+    				$this->stream->writeByte ( ( $int >> 7 ) | 0x80 );
+    				$this->stream->writeByte ( $int & 0x7f );
 
-					return;
-				}
+    				return;
+    			}
 
-				$this->stream->writeByte ( ( $int >> 22 ) | 0x80 );
-				$this->stream->writeByte ( ( $int >> 15 ) | 0x80 );
-				$this->stream->writeByte ( ( $int >> 8 ) | 0x80 );
-				$this->stream->writeByte ( $int & 0xff );
+    			$this->stream->writeByte ( ( $int >> 22 ) | 0x80 );
+    			$this->stream->writeByte ( ( $int >> 15 ) | 0x80 );
+    			$this->stream->writeByte ( ( $int >> 8 ) | 0x80 );
+    			$this->stream->writeByte ( $int & 0xff );
 
-				return;
+    			return;
         }
 
         public function writeByteArray(SabreAMF_ByteArray $data) {
