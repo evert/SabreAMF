@@ -139,9 +139,13 @@
 
                 try {
 
+                    if (is_array($request['data']) && isset($request['data'][0]) && $request['data'][0] instanceof SabreAMF_AMF3_AbstractMessage) {
+                        $request['data'] = $request['data'][0];
+                    }
+
                     // See if we are dealing with the AMF3 messaging system
                     if (is_object($request['data']) && $request['data'] instanceof SabreAMF_AMF3_AbstractMessage) {
-                        
+            
                         $AMFVersion = 3;
                        
                         // See if we are dealing with a CommandMessage
