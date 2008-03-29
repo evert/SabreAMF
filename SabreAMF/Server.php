@@ -29,30 +29,31 @@
          * 
          * @var SabreAMF_InputStream 
          */
-        private $amfInputStream;
+        protected $amfInputStream;
         /**
          * amfOutputStream 
          * 
          * @var SabreAMF_OutputStream 
          */
-        private $amfOutputStream;
+        protected $amfOutputStream;
+
         /**
-         * amfRequest 
+         * The representation of the AMF request
          * 
-         * @var mixed
+         * @var SabreAMF_Message 
          */
-        private $amfRequest;
+        protected $amfRequest;
+
         /**
-         * amfResponse 
+         * The representation of the AMF response
          * 
-         * @var mixed
+         * @var SabreAMF_Message 
          */
-        private $amfResponse;
+        protected $amfResponse;
 
         /**
          * __construct 
          * 
-         * @param bool $dump 
          * @return void
          */
         public function __construct() {
