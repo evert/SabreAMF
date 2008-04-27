@@ -107,7 +107,7 @@
                 case SabreAMF_AMF0_Const::DT_MIXEDARRAY  : return $this->writeMixedArray($data);
                 case SabreAMF_AMF0_Const::DT_ARRAY       : return $this->writeArray($data);
                 case SabreAMF_AMF0_Const::DT_DATE        : return $this->writeDate($data);
-                case SabreAMF_AMF0_Const::DT_LONGSTRING  : return $this->writeLongString();
+                case SabreAMF_AMF0_Const::DT_LONGSTRING  : return $this->writeLongString($data);
                 case SabreAMF_AMF0_Const::DT_TYPEDOBJECT : return $this->writeTypedObject($data);
                 case SabreAMF_AMF0_Const::DT_AMF3        : return $this->writeAMF3Data($data);
                 default                   :  throw new Exception('Unsupported type: ' . gettype($data)); return false;
