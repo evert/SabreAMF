@@ -47,7 +47,7 @@
                 if (!$type && (is_int($data) || is_float($data))) $type = SabreAMF_AMF0_Const::DT_NUMBER;
 
                 // String (a long one)
-                if (!$type && is_string($data) && strlen($data)>65536) $type = SabreAMF_Const::DT_LONGSTRING;
+                if (!$type && is_string($data) && strlen($data)>65536) $type = SabreAMF_AMF0_Const::DT_LONGSTRING;
 
                 // Normal string
                 if (!$type && is_string($data))  $type = SabreAMF_AMF0_Const::DT_STRING;
