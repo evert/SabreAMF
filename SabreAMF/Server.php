@@ -4,6 +4,7 @@
     require_once 'SabreAMF/InputStream.php';
     require_once 'SabreAMF/Message.php';
     require_once 'SabreAMF/Const.php';
+    require_once 'SabreAMF/InvalidAMFException.php';
  
 
     /**
@@ -59,7 +60,7 @@
         public function __construct() {
 
             $data = file_get_contents('php://input');
-            if (!$data) throw new Exception('No valid AMF request received');
+            if (!$data) throw new SabreAMF_InvalidAMFException();
 
             //file_put_contents($dump.'/' . md5($data),$data);
 
