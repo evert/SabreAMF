@@ -178,7 +178,7 @@
          * @author Asbjørn Sloth Tønnesen <asbjorn@lila.io>
          * @return bool
          */
-        public function setInputStream($stream) {
+        static public function setInputStream($stream) {
 
             if (!is_readable($stream)) return false;
 
