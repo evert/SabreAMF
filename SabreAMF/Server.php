@@ -60,14 +60,20 @@
         static protected $dataInputStream = 'php://input';
 
         /**
+         * Input string to read the AMF from
+         * 
+         * @var SabreAMF_Message 
+         */
+        static protected $dataInputData = '';
+
+        /**
          * __construct 
          * 
          * @return void
          */
         public function __construct() {
 
-            $data = file_get_contents(self::$dataInputStream);
-            if (!$data) throw new SabreAMF_InvalidAMFException();
+            $data = $this->readInput();
 
             //file_put_contents($dump.'/' . md5($data),$data);
 
@@ -169,7 +175,7 @@
         }
 
         /**
-         * setInputStream
+         * setInputFile
          *
          * returns the true/false depended on wheater the stream is readable
          *
@@ -178,12 +184,52 @@
          * @author Asbjørn Sloth Tønnesen <asbjorn@lila.io>
          * @return bool
          */
-        static public function setInputStream($stream) {
+        static public function setInputFile($stream) {
 
             if (!is_readable($stream)) return false;
 
             self::$dataInputStream = $stream;
             return true;
+
+        }
+
+        /**
+         * setInputString
+         *
+         * Returns the true/false depended on wheater the string was accepted.
+         * That a string is accepted by this method, does NOT mean that it is a valid AMF request.
+         *
+         * @param string $stream New input stream
+         *
+         * @author Asbjørn Sloth Tønnesen <asbjorn@lila.io>
+         * @return bool
+         */
+        static public function setInputString($stream) {
+
+            if (!is_readable($stream)) return false;
+
+            self::$dataInputStream = null;
+            self::$dataInputData = $string;
+            return true;
+
+        }
+
+        /**
+         * readInput
+         *
+         * Reads the input from string
+         *
+         * @author Asbjørn Sloth Tønnesen <asbjorn@lila.io>
+         * @return string Binary string containing the AMF data
+         */
+        protected function readInput() {
+
+            if (is_null(self::$dataInputStream)) return self::$dataInputData;
+
+            $data = file_get_contents(self::$dataInputStream);
+            if (!$data) throw new SabreAMF_InvalidAMFException();
+
+            return $data;
 
         }
 
