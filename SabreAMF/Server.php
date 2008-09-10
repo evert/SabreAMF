@@ -53,13 +53,20 @@
         protected $amfResponse;
 
         /**
+         * Input stream to read the AMF from
+         * 
+         * @var SabreAMF_Message 
+         */
+        static protected $dataInputStream = 'php://input';
+
+        /**
          * __construct 
          * 
          * @return void
          */
         public function __construct() {
 
-            $data = file_get_contents('php://input');
+            $data = file_get_contents(self::$dataInputStream);
             if (!$data) throw new SabreAMF_InvalidAMFException();
 
             //file_put_contents($dump.'/' . md5($data),$data);
@@ -158,6 +165,25 @@
         public function getRequestHeaders() {
             
             return $this->amfRequest->getHeaders();
+
+        }
+
+        /**
+         * setInputStream
+         *
+         * returns the true/false depended on wheater the stream is readable
+         *
+         * @param string $stream New input stream
+         *
+         * @author Asbjørn Sloth Tønnesen <asbjorn@lila.io>
+         * @return bool
+         */
+        public function setInputStream($stream) {
+
+            if (!is_readable($stream)) return false;
+
+            self::$dataInputStream = $stream;
+            return true;
 
         }
 
