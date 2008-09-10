@@ -217,7 +217,8 @@
         /**
          * readInput
          *
-         * Reads the input from string
+         * Reads the input from stdin unless it has been overwritten
+         * with setInputFile or setInputString.
          *
          * @author Asbjørn Sloth Tønnesen <asbjorn@lila.io>
          * @return string Binary string containing the AMF data
