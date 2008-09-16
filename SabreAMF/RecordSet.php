@@ -49,7 +49,7 @@
         public function getAMFData() {
 
             return (object)array(
-                'ServerInfo' => (object)array(
+                'serverInfo' => (object)array(
                     'totalCount'  => $this->count(),
                     'initialData' => $this->getData(),
                     'cursor'      => 1,
