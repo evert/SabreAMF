@@ -66,6 +66,9 @@
                     $response = new SabreAMF_AMF3_AcknowledgeMessage($request);
                     $response->body = true;
                     break;
+                case SabreAMF_AMF3_CommandMessage::DISCONNECT_OPERATION :
+                    $response = new SabreAMF_AMF3_AcknowledgeMessage($request);
+                    break;
                 default :
                     throw new Exception('Unsupported CommandMessage operation: '  . $request->operation);
 

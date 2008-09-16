@@ -28,6 +28,8 @@
         const LOGIN_OPERATION              = 8;
         const LOGOUT_OPERATION             = 9;
         const SESSION_INVALIDATE_OPERATION = 10;
+        const MULTI_SUBSCRIBE_OPERATION    = 11;
+        const DISCONNECT_OPERATION         = 12;
 
         /**
          * operation 
