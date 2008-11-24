@@ -199,14 +199,15 @@
          * Returns the true/false depended on wheater the string was accepted.
          * That a string is accepted by this method, does NOT mean that it is a valid AMF request.
          *
-         * @param string $stream New input stream
+         * @param string $string New input string
          *
          * @author Asbjørn Sloth Tønnesen <asbjorn@lila.io>
          * @return bool
          */
-        static public function setInputString($stream) {
+        static public function setInputString($string) {
 
-            if (!is_readable($stream)) return false;
+            if (!(is_string($string) && strlen($string) > 0))
+                throw new SabreAMF_InvalidAMFException();
 
             self::$dataInputStream = null;
             self::$dataInputData = $string;
