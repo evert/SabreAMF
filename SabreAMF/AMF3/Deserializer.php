@@ -94,7 +94,7 @@
          */
         public function readObject() {
 
-            $objInfo = $this->readInt();
+            $objInfo = $this->readU29();
             $storedObject = ($objInfo & 0x01)==0;
             $objInfo = $objInfo >> 1;
 
@@ -144,7 +144,7 @@
                 //ClassMapping magic
                 if ($className) {
 
-                    if ($localClassName = SabreAMF_ClassMapper::getLocalClass($className)) {
+                    if ($localClassName = $this->getLocalClassName($className)) {
 
                         $rObject = new $localClassName();
 
@@ -233,7 +233,7 @@
          */
         public function readArray() {
 
-            $arrId = $this->readInt();
+            $arrId = $this->readU29();
             if (($arrId & 0x01)==0) {
                  $arrId = $arrId >> 1;
                  if ($arrId>=count($this->storedObjects)) {
@@ -270,7 +270,7 @@
          */
         public function readString() {
 
-            $strref = $this->readInt();
+            $strref = $this->readU29();
 
             if (($strref & 0x01) == 0) {
                 $strref = $strref >> 1;
@@ -296,7 +296,7 @@
          */
         public function readXMLString() {
 
-            $strref = $this->readInt();
+            $strref = $this->readU29();
 
             $strlen = $strref >> 1; 
             $str = $this->stream->readBuffer($strlen);
@@ -311,7 +311,7 @@
          */
         public function readByteArray() {
 
-            $strref = $this->readInt();
+            $strref = $this->readU29();
 
             $strlen = $strref >> 1; 
             $str = $this->stream->readBuffer($strlen);
@@ -320,41 +320,55 @@
         }
 
         /**
-         * readInt 
+         * readU29 
          * 
-         * @return int 
+         * @return int
          */
-        public function readInt() {
+        public function readU29() {
 
             $count = 1;
-            $int = 0;
+            $u29 = 0;
 
             $byte = $this->stream->readByte();
-
-    		while((($byte & 0x80) != 0) && $count < 4) {
-                $int <<= 7;
-                $int |= ($byte & 0x7f);
+  
+            while((($byte & 0x80) != 0) && $count < 4) {
+                $u29 <<= 7;
+                $u29 |= ($byte & 0x7f);
                 $byte = $this->stream->readByte();
                 $count++;
             }
             
             if ($count < 4) {
-                $int <<= 7;
-                $int |= $byte;
+                $u29 <<= 7;
+                $u29 |= $byte;
             } else {
                 // Use all 8 bits from the 4th byte
-                $int <<= 8;
-                $int |= $byte;
-                
-                // Check if the integer should be negative
-                if (($int & 0x10000000) != 0) {
-                	// and extend the sign bit
-                	$int |= 0xe0000000;
-                }
+                $u29 <<= 8;
+                $u29 |= $byte;
             }
             
-            return $int;
+            return $u29;
          
+        }
+
+        /**
+         * readInt
+         *
+         * @return int
+         */
+        public function readInt() {
+            
+            $int = $this->readU29();
+            // if int and has the sign bit set
+            // Check if the integer is an int
+            // and is signed
+            if (($int & 0x18000000) != 0) {
+                $int ^= 0x1fffffff;
+                $int *= -1;
+            }
+
+            return $int;
+
         }
 
         /**
@@ -363,7 +377,7 @@
          * @return int 
          */
         public function readDate() {
-            $dateref = $this->readInt();
+            $dateref = $this->readU29();
             if (($dateref & 0x01) == 0) {
                 $dateref = $dateref >> 1;
                 if ($dateref>=count($this->storedObjects)) {
