@@ -365,6 +365,7 @@
             if (($int & 0x18000000) != 0) {
                 $int ^= 0x1fffffff;
                 $int *= -1;
+                $int -= 1;
             }
 
             return $int;
