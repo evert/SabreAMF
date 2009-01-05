@@ -20,4 +20,4 @@
 
     $server->sendResponse(); //Send the responses back to the client
 
-?>
+

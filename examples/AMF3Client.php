@@ -10,4 +10,4 @@
    
     var_dump($result); //Dump the results
 
-?>
+
