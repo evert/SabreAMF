@@ -1,0 +1,3 @@
+- create more samples
+- create flex samples
+- create a sample console demoing usual drupal exposed services (menu, node, search, system, views, etc.), "a-la" drupal service browser

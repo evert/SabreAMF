@@ -1,0 +1,10 @@
+Read the following:
+
+First, explore all the txt files from all the directories in this package.
+This module requires SabreAMF framework from: http://code.google.com/p/sabreamf
+and drupal services module from: http://drupal.org/project/Services.
+
+Installation method:
+Just extract it in your modules path and enable it from the drupal modules 
+management panel(smth like http://localhost/drupal/admin/build/modules).
+Scroll that list and check mark SabreAMF.

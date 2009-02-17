@@ -1,0 +1,2 @@
+- attempt automatic classmapping between drupal nodes and actionscript classes
+- fix nid problem

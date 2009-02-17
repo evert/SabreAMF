@@ -1,0 +1,6 @@
+; $Id: sabreamf.info,v 1.0 2009/02/17 20:35:00 stoica.ionut Exp $
+name = SabreAMF
+description = Provides an SabreAMF server.
+package = Services - servers
+dependencies[] = services
+core = 6.x

@@ -1,0 +1,14 @@
+@charset "UTF-8";
+html { background-color: #000000; color:#ffffff; font-family:Verdana; font-size: 11px; color:#ffdd11 }
+
+#logo {
+    margin: 0 auto;
+    margin-top: 25%;
+    background-image: url(../images/sabreamf.png); 
+    background-repeat:no-repeat; 
+    width:261px; 
+    height:46px; 
+    font-weight:bold; 
+}
+
+#logo span { display: none; }

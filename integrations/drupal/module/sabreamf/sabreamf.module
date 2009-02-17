@@ -1,0 +1,90 @@
+<?php
+// $Id: sabreamf.info,v 1.0 2009/02/17 20:35:00 stoica.ionut Exp $
+
+/*
+ * Implementation of hook_requirements()
+ */
+function sabreamf_requirements($phase) {
+    // Test SabreAMF version 
+    $requirements['sabreamf'] = array( 
+        'title' => t('SabreAMF'), 
+        'value' => t('1.2'), 
+    );
+
+    if (!file_exists(realpath(dirname(__FILE__) . '/SabreAMF/Server.php'))) { 
+        $requirements['sabreamf']['value'] = t('SabreAMF framework was not found');
+        $requirements['sabreamf']['description'] = t('You must dowload <a href="http://sabreamf.googlecode.com">SabreAMF</a> framework and install it into modules/sabreamf/SabreAMF.');
+        $requirements['sabreamf']['severity'] = REQUIREMENT_ERROR; 
+    }
+
+    return $requirements;
+}
+
+/*
+ * Implementation of hook_server_info()
+ */
+function sabreamf_server_info() {
+    return array(
+        '#name' => 'SabreAMF',
+        '#path' => 'sabreamf',
+    );
+}
+
+/*
+ * Implementation of hook_server()
+ */
+function sabreamf_server() {
+
+    $path = $_SERVER['DOCUMENT_ROOT'] . base_path() . drupal_get_path('module', 'sabreamf');
+
+    if(!(isset($_SERVER['CONTENT_TYPE']) && ($_SERVER['CONTENT_TYPE'] == 'application/x-amf'))) {
+        $media_url = base_path().drupal_get_path('module', 'sabreamf').'/media';
+        $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+';
+        $html .= '<html><head><title>SabreAMF gateway ready</title>';
+        $html .= '<link rel="stylesheet" href="'.$media_url.'/styles/reset.css" type="text/css" media="all"/>';
+        $html .= '<link rel="stylesheet" href="'.$media_url.'/styles/sabreamf.css" type="text/css" media="all"/>';
+        $html .= '</head><body><div id="logo"><span>Your sabreamf gateway is ready</span></div></body></html>';
+        echo $html;
+    } else {
+        set_include_path(get_include_path().PATH_SEPARATOR.$path);
+        require_once $path . '/SabreAMF/CallbackServer.php';
+        $server = new SabreAMF_CallbackServer();
+        $server->onInvokeService = '_sabreamf_server_callback';
+        $server->exec();
+    }
+}
+
+function _sabreamf_server_callback($serviceName, $methodName, $arguments) {
+    $method = $serviceName.'.'.$methodName;
+    // this is only a convenience method so that you can test sabreamf drupal module
+    // using a php script (running from browser or from the console(ie: command line in windows))
+    // this "if" block bellow can be removed with no issue
+    if($methodName == 'sabreamf_pingme') {
+        return array($method, $arguments);
+    }
+    return sabreamf_method_call($method, array($method, $arguments));
+}
+
+/*
+ * Implementation of hook_method_call()
+ */
+function sabreamf_method_call($method_name, $args) {
+    return services_method_call($method_name, $args);
+}
+
+/*
+ * Implementation of hook_server_error()
+ */
+function sabreamf_server_error($message) {
+    watchdog('sabreamf server', $message, NULL, WATCHDOG_ERROR);
+}
+
+/*
+function trace_dump_sabreamf() {
+    $args = func_get_args();
+    $fp = fopen(dirname(__FILE__).'/log.txt', 'a+');
+    fwrite($fp, print_r($args, true)."\n");
+    fclose($fp);
+}
+*/
