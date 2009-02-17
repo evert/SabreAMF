@@ -1,5 +1,5 @@
 ﻿/**
- * This code is distributed under WTFPL (seriously)
+ * This code is distributed under a non restrictive license
  * - so do whatever you want with it
  */
 
