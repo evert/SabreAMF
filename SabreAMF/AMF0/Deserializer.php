@@ -84,6 +84,7 @@
         public function readObject() {
 
             $object = array();
+            $this->refList[] =& $object;
             while (true) {
                 $key = $this->readString();
                 $vartype = $this->stream->readByte();
@@ -93,7 +94,6 @@
             if (defined('SABREAMF_OBJECT_AS_ARRAY')) {
                 $object = (object)$object;
             }
-            $this->refList[] = $object;
             return $object;    
 
         }
@@ -198,6 +198,7 @@
 
             $classname = $this->readString();
             $object = array();
+            $this->refList[] =& $object;
             while (true) {
                 $key = $this->readString();
                 $vartype = $this->stream->readByte();
@@ -209,7 +210,6 @@
                 // AAARRRGGGH
             } else {
                 $object = new SabreAMF_TypedObject($classname,$object);
-                $this->refList[] = $object;
             }
             return $object;
 
