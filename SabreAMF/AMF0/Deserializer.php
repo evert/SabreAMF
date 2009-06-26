@@ -197,21 +197,33 @@
         public function readTypedObject() {
 
             $classname = $this->readString();
-            $object = array();
-            $this->refList[] =& $object;
+
+            $isMapped = false;
+
+            if ($classname = $this->getLocalClassName($classname)) {
+                $rObject = new $classname();
+                $isMapped = true;
+            } else {
+                $rObject = new SabreAMF_TypedObject($classname,null);
+            }
+            $this->refList[] =& $rObject;
+
+            $props = array();
             while (true) {
                 $key = $this->readString();
                 $vartype = $this->stream->readByte();
                 if ($vartype==SabreAMF_AMF0_Const::DT_OBJECTTERM) break;
-                $object[$key] = $this->readAmfData($vartype);
+                $props[$key] = $this->readAmfData($vartype);
             }
-            $object = (object)$object;
-            if ($classname = $this->getLocalClassName($classname)) {
-                // AAARRRGGGH
+
+            if ($isMapped) {
+                foreach($props as $k=>$v) 
+                    $rObject->$k = $v;
             } else {
-                $object = new SabreAMF_TypedObject($classname,$object);
+                $rObject->setAMFData($props);
             }
-            return $object;
+
+            return $rObject;
 
         }
         
