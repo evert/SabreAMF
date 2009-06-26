@@ -125,6 +125,7 @@
 
             $length = $this->stream->readLong();
             $arr = array();
+            $this->refList[]&=$arr;
             while($length--) $arr[] = $this->readAMFData();
             return $arr;
 
