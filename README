@@ -19,7 +19,6 @@ Drupal integration:
 	Ionut Stoica
 
 Thanks to:
-
 	Kevin Langdon, author of ServiceCapture for making the first big steps in decoding the AMF3 spec and helping out when i got stuck
 	The AMFPHP team for their excellent piece of software.
 	The OSFlash community for opening up the Flash Platform.
