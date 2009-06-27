@@ -55,7 +55,7 @@
             <option name="notes">Stable release.</option>
             <option name="description">SabreAMF is a Flash Remoting server/client. SabreAMF supports both the AMF0 and AMF3 protocols</option>
             <option name="summary">SabreAMF is a Flash Remoting server/client, supporting AMF0 and AMF3 protocols</option>
-            <option name="version" value="1.2.${svn.lastrevision}" />
+            <option name="version" value="1.3.${svn.lastrevision}" />
             <option name="state" value="stable" />
             <option name="licence" value="BSD" />
             <mapping name="maintainers">
