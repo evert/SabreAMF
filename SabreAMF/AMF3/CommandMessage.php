@@ -7,7 +7,7 @@
      * @uses _AMF3_AbstractMessage
      * @package 
      * @version $Id$
-     * @copyright Copyright (C) 2006-2008 Rooftop Solutions. All rights reserved.
+     * @copyright Copyright (C) 2006-2009 Rooftop Solutions. All rights reserved.
      * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */

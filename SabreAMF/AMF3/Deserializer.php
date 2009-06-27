@@ -13,7 +13,7 @@
      * @package SabreAMF
      * @subpackage AMF3
      * @version $Id$
-     * @copyright Copyright (C) 2006-2008 Rooftop Solutions. All rights reserved.
+     * @copyright Copyright (C) 2006-2009 Rooftop Solutions. All rights reserved.
      * @author Evert Pot (http://www.rooftopsolutions.nl/) 
      * @author Karl von Randow http://xk72.com/
      * @author Jim Mischel

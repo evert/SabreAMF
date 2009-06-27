@@ -16,6 +16,7 @@
         <echo msg="Preparing build.." />
         <mkdir dir="${BUILDDIR}" />
         <copy file="LICENCE" todir="${BUILDDIR}" />
+        <copy file="README" todir="${BUILDDIR}" />
     </target>
 
     <target name="build" depends="prepare">
