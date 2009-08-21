@@ -21,7 +21,7 @@ class Test_AMF3_Int extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * //@dataProvider providerInt
+     * @dataProvider providerInt
      */
     public function testWrite($input, $value, $writebytetest)
     {
