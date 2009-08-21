@@ -362,10 +362,13 @@
             // if int and has the sign bit set
             // Check if the integer is an int
             // and is signed
-            if (($int & 0x18000000) != 0) {
+            if (($int & 0x18000000) == 0x18000000) {
                 $int ^= 0x1fffffff;
                 $int *= -1;
                 $int -= 1;
+            } else if (($int & 0x10000000) == 0x10000000) {
+                // remove the signed flag
+                $int &= 0x0fffffff;
             }
 
             return $int;
