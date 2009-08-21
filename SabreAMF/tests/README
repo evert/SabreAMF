@@ -1,0 +1,17 @@
+Running tests
+=============
+
+From SabreAMF directory run the following command:
+
+$ phpunit tests/alltests.php
+
+Installing PHPUnit
+==================
+
+see http://www.phpunit.de/manual/current/en/installation.html
+
+- or -
+
+on debian based systems:
+  sudo aptitude install phpunit
+
