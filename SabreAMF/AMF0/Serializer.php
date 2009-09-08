@@ -149,8 +149,11 @@
                 $last = key($data);
                 $this->stream->writeLong($last+1);
                 for($i=0;$i<=$last;$i++) {
-                    $item = isset($data[$i])?$data[$i]:NULL;
-                    $this->writeAMFData($item);
+                    if (isset($data[$i])) {
+                        $this->writeAMFData($item);
+                    } else {
+                        $this->stream->writeByte(SabreAMF_AMF0_Const::DT_UNDEFINED);
+                    }
                 }
             }
 
