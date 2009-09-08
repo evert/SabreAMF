@@ -150,7 +150,7 @@
                 $this->stream->writeLong($last+1);
                 for($i=0;$i<=$last;$i++) {
                     if (isset($data[$i])) {
-                        $this->writeAMFData($item);
+                        $this->writeAMFData($data[$i]);
                     } else {
                         $this->stream->writeByte(SabreAMF_AMF0_Const::DT_UNDEFINED);
                     }
