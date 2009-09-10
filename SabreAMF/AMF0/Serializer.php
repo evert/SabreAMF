@@ -55,15 +55,15 @@
                 // Checking if its an array
                 if (!$type && is_array($data))   {
 
-                    // Looping through the array to see if there are any
-                    // non-numeric keys
+                    $i=0;
                     foreach(array_keys($data) as $key) {
-                        if (!is_numeric($key)) {
-                            // There's a non-numeric key.. we'll make it a mixed
-                            // array
+                        if (!is_numeric($key) || $key != $i || intval($key) != $key) {
+                            // There's a non-numeric key or sparse array, we'll
+                            // we'll make it a mixed array
                             $type = SabreAMF_AMF0_Const::DT_MIXEDARRAY;
                             break;
                         }
+                        $i++;
                     }
 
                     // Pure array
