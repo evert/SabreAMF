@@ -238,8 +238,14 @@
             // We need to split up strings an numeric array keys
             $num = array();
             $string = array();
+            $i=0;
             foreach($arr as $k=>$v) {
-                if (is_int($k)) $num[] = $v; else $string[$k] = $v;
+                if (!is_numeric($k) || $k != $i || intval($k) != $k) {
+                    $string[$k] = $v;
+                } else {
+                    $num[] = $v;
+                }
+                $i++;
             }
 
             unset($arr);
