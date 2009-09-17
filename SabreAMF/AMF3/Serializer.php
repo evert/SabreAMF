@@ -226,6 +226,24 @@
         }
 
         /**
+         * Checks wether the provided array has string keys and if it's not sparse. 
+         *
+         * @param array $arr
+         * @return bool
+         */
+        protected function isPureArray(array $array ) {
+            $i=0;
+            foreach($array as $k=>$v) {
+                if ( $k !== $i && (int)$k !== $k ) {
+                   return false;
+                }
+                $i++;
+            }
+
+            return true;
+        }
+
+        /**
          * writeArray 
          * 
          * @param array $arr 
@@ -233,37 +251,25 @@
          */
         public function writeArray(array $arr) {
 
-            end($arr);
-
-            // We need to split up strings an numeric array keys
-            $num = array();
-            $string = array();
-            $i=0;
-            foreach($arr as $k=>$v) {
-                if (!is_numeric($k) || $k != $i || intval($k) != $k) {
-                    $string[$k] = $v;
-                } else {
-                    $num[] = $v;
+            //Check if this is an associative array or not.
+            if ( !$this->isPureArray( $arr ) ) {
+                $this->writeInt(1);
+                foreach($arr as $key=>$value) {
+                    $this->writeString($key);
+                    $this->writeAMFData($value);
                 }
-                $i++;
-            }
-
-            unset($arr);
-
-            // Writing the length for the numeric keys in the array
-            $arrLen = count($num); 
-            $arrId = ($arrLen << 1) | 0x01;
-
-            $this->writeInt($arrId);
-
-            foreach($string as $key=>$v) {
-                $this->writeString($key);
-                $this->writeAMFData($v);
-            }
-            $this->writeString("");
-           
-            foreach($num as $v) {
-                $this->writeAMFData($v);
+                $this->writeString('');
+            } else {
+              // Writing the length for the numeric keys in the array
+              $arrLen = count($arr);
+              $arrId = ($arrLen << 1) | 0x01;
+  
+              $this->writeInt($arrId);
+              $this->writeString('');
+  
+              foreach($arr as $v) {
+                  $this->writeAMFData($v);
+              }
             }
 
         }
@@ -283,5 +289,3 @@
         }
 
     }
-
-
