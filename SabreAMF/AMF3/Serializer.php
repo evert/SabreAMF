@@ -226,24 +226,6 @@
         }
 
         /**
-         * Checks wether the provided array has string keys and if it's not sparse. 
-         *
-         * @param array $arr
-         * @return bool
-         */
-        protected function isPureArray(array $array ) {
-            $i=0;
-            foreach($array as $k=>$v) {
-                if ( $k !== $i && (int)$k !== $k ) {
-                   return false;
-                }
-                $i++;
-            }
-
-            return true;
-        }
-
-        /**
          * writeArray 
          * 
          * @param array $arr 
@@ -252,14 +234,7 @@
         public function writeArray(array $arr) {
 
             //Check if this is an associative array or not.
-            if ( !$this->isPureArray( $arr ) ) {
-                $this->writeInt(1);
-                foreach($arr as $key=>$value) {
-                    $this->writeString($key);
-                    $this->writeAMFData($value);
-                }
-                $this->writeString('');
-            } else {
+            if ( $this->isPureArray( $arr ) ) {
               // Writing the length for the numeric keys in the array
               $arrLen = count($arr);
               $arrId = ($arrLen << 1) | 0x01;
@@ -270,6 +245,15 @@
               foreach($arr as $v) {
                   $this->writeAMFData($v);
               }
+
+            } else {
+                $this->writeInt(1);
+                foreach($arr as $key=>$value) {
+                    $this->writeString($key);
+                    $this->writeAMFData($value);
+                }
+                $this->writeString('');
+
             }
 
         }

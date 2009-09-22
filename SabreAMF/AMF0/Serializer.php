@@ -54,20 +54,11 @@
 
                 // Checking if its an array
                 if (!$type && is_array($data))   {
-
-                    $i=0;
-                    foreach(array_keys($data) as $key) {
-                        if (!is_numeric($key) || $key != $i || intval($key) != $key) {
-                            // There's a non-numeric key or sparse array, we'll
-                            // we'll make it a mixed array
-                            $type = SabreAMF_AMF0_Const::DT_MIXEDARRAY;
-                            break;
-                        }
-                        $i++;
-                    }
-
-                    // Pure array
-                    if (!$type) $type = SabreAMF_AMF0_Const::DT_ARRAY;
+		    if ( $this->isPureArray( $data ) ) {
+			$type = SabreAMF_AMF0_Const::DT_ARRAY;
+		    } else {
+		    	$type = SabreAMF_AMF0_Const::DT_MIXEDARRAY;
+		    }
                 }
 
                 // Its an object

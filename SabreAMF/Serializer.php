@@ -72,6 +72,24 @@
 
         } 
 
+       /**
+         * Checks wether the provided array has string keys and if it's not sparse.
+         *
+         * @param array $arr
+         * @return bool
+         */
+        protected function isPureArray(array $array ) {
+            $i=0;
+            foreach($array as $k=>$v) {
+                if ( $k !== $i && (int)$k !== $k ) {
+                   return false;
+                }
+                $i++;
+            }
+
+            return true;
+        }
+
     }
 
 
