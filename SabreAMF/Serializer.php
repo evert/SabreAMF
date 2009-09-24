@@ -81,7 +81,7 @@
         protected function isPureArray(array $array ) {
             $i=0;
             foreach($array as $k=>$v) {
-                if ( $k !== $i || (int)$k !== $k ) {
+                if ( $k !== $i ) {
                    return false;
                 }
                 $i++;
