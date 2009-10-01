@@ -200,8 +200,8 @@
 
             $isMapped = false;
 
-            if ($classname = $this->getLocalClassName($classname)) {
-                $rObject = new $classname();
+            if ($localClassname = $this->getLocalClassName($classname)) {
+                $rObject = new $localClassname();
                 $isMapped = true;
             } else {
                 $rObject = new SabreAMF_TypedObject($classname,null);
