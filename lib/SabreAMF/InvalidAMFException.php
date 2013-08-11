@@ -10,10 +10,6 @@
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
 
-    /**
-     * Detailed exception 
-     */
-    require_once 'SabreAMF/DetailException.php';
 
     /**
      * In valid AMF exception

@@ -1,11 +1,5 @@
 <?php
 
-    require_once 'SabreAMF/AMF3/Const.php';
-    require_once 'SabreAMF/Const.php';
-    require_once 'SabreAMF/Serializer.php';
-    require_once 'SabreAMF/ITypedObject.php';
-    require_once 'SabreAMF/ByteArray.php';
-
     /**
      * SabreAMF_AMF3_Serializer 
      * 

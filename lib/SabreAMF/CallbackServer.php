@@ -1,13 +1,5 @@
 <?php
 
-    require_once 'SabreAMF/Server.php';
-    require_once 'SabreAMF/AMF3/AbstractMessage.php';
-    require_once 'SabreAMF/AMF3/AcknowledgeMessage.php';
-    require_once 'SabreAMF/AMF3/RemotingMessage.php';
-    require_once 'SabreAMF/AMF3/CommandMessage.php';
-    require_once 'SabreAMF/AMF3/ErrorMessage.php';
-    require_once 'SabreAMF/DetailException.php';
-
     /**
      * AMF Server
      * 

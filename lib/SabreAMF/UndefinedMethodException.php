@@ -11,12 +11,6 @@
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
 
-    /**
-     * Detailed Exception interface
-     *
-     * @uses SabreAMF_DetailException
-     */
-    require_once 'SabreAMF/DetailException.php';
 
     /**
      * This is the receipt for UndefinedMethodException and default values reflective of ColdFusion RPC faults

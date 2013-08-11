@@ -1,10 +1,5 @@
 <?php
 
-    require_once 'SabreAMF/AMF0/Serializer.php'; 
-    require_once 'SabreAMF/AMF0/Deserializer.php'; 
-    require_once 'SabreAMF/Const.php';
-    require_once 'SabreAMF/AMF3/Wrapper.php';
-
     /**
      * SabreAMF_Message 
      * 

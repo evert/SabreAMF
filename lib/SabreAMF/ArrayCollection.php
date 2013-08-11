@@ -1,7 +1,5 @@
 <?php
 
-    require_once 'SabreAMF/Externalized.php';
-
     /**
      * This is the default mapping for the flex.messaging.io.ArrayCollection class
      * It can be accessed using most of the normal array access methods

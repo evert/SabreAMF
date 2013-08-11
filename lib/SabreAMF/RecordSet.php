@@ -1,6 +1,4 @@
 <?php
-
-    require_once 'SabreAMF/ITypedObject.php'; 
  
     /**
      * SabreAMF_RecordSet 

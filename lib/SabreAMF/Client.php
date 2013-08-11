@@ -1,12 +1,5 @@
 <?php
 
-
-    require_once 'SabreAMF/Message.php';
-    require_once 'SabreAMF/OutputStream.php';
-    require_once 'SabreAMF/InputStream.php';
-    require_once 'SabreAMF/Const.php';
-    require_once 'SabreAMF/AMF3/Wrapper.php';
-
     /**
      * AMF Client
      *

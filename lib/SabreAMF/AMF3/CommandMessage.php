@@ -12,8 +12,6 @@
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
 
-    require_once 'SabreAMF/AMF3/AbstractMessage.php';
-
     /**
      * This class is used for service commands, like pinging the server
      */

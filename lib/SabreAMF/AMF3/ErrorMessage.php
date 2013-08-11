@@ -12,10 +12,6 @@
      * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
      */
 
-    /**
-     * This message is based on Abstract Message
-     */
-    require_once 'SabreAMF/AMF3/AcknowledgeMessage.php';
 
     /**
      * This is the receipt for Error Messages 
