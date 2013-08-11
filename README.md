@@ -23,17 +23,15 @@ Credits
 -------
 
 Main Author:
-
 * [Evert Pot][3]
 
 Bugfixes, suggestions, improvements:
-
 * [Karl von Randow][4]
 * [Renaun Erickson][5]
 * [Asbjørn Sloth Tønnesen][6]
 
 Drupal integration:
-	Ionut Stoica
+* Ionut Stoica
 
 Thanks to:
 * Kevin Langdon, author of ServiceCapture for making the first big steps in decoding the AMF3 spec and helping out when i got stuck
