@@ -10,8 +10,8 @@
         <include name="README" />
         <include name="LICENCE" />
         <include name="ChangeLog" />
-    </fileset>    
-        
+    </fileset>
+
 
     <target name="prepare">
         <echo msg="Preparing build.." />
@@ -29,7 +29,7 @@
                 <include name="*.php" />
                 <include name="AMF0/*.php" />
                 <include name="AMF3/*.php" />
-            </fileset>    
+            </fileset>
         </copy>
     </target>
 
@@ -40,7 +40,7 @@
             <fileset dir="examples/">
                 <include name="*.php" />
             </fileset>
-        </copy>    
+        </copy>
     </target>
 
     <target name="textfiles" depends="prepare">
@@ -48,7 +48,7 @@
         <copy todir="${BUILDDIR}" file="README" />
         <copy todir="${BUILDDIR}" file="LICENCE" />
         <copy todir="${BUILDDIR}" file="ChangeLog" />
-    </target>    
+    </target>
 
     <target name="package" depends="build, pearpkg">
         <echo msg="packaging" />
@@ -82,8 +82,8 @@
                 <element key="ChangeLog" value="doc" />
                 <element key="README" value="doc" />
                 <element key="LICENCE" value="doc" />
-             </mapping>   
-         </pearpkg> 
+             </mapping>
+         </pearpkg>
     </target>
 
     <target name="documentation" depends="prepare">
@@ -92,12 +92,12 @@
 
     <target name="dist" depends="build, buildexamples, textfiles, pearpkg">
         <echo msg="Creating full featured SabreAMF package" />
-    </target>    
+    </target>
 
     <target name="clean">
         <echo msg="Removing build files (cleaning up distribution)" />
         <delete dir="build/" />
         <delete dir="apidocs" />
-    </target>    
+    </target>
 
 </project>

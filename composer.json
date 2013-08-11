@@ -7,6 +7,10 @@
     "require" : {
         "php"          : ">=5.2.1"
     },
+    "require-dev" : {
+        "phing/phing" : "*",
+        "phpunit/phpunit" : "*"
+    },
     "authors" : [
         {
             "name" : "Evert Pot",
