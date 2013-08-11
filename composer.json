@@ -1,0 +1,26 @@
+{
+    "name": "sabre/amf",
+    "description" : "SabreAMF is a Flash Remoting server and client for PHP",
+    "keywords" : [ "Flash", "ActionScript", "Remoting", "AMF", "AMF0", "AMF3" ],
+    "homepage" : "http://code.google.com/p/sabreamf/",
+    "license" : "BSD-3-Clause",
+    "require" : {
+        "php"          : ">=5.2.1"
+    },
+    "authors" : [
+        {
+            "name" : "Evert Pot",
+            "email" : "evert@rooftopsolutions.nl",
+            "homepage" : "http://evertpot.com/",
+            "role" : "Developer"
+        }
+    ],
+    "support" : {
+        "source" : "https://github.com/fruux/sabre-vobject"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "SabreAMF" : "lib/"
+        }
+    }
+}
