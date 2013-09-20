@@ -57,7 +57,6 @@
                 $settype = $this->stream->readByte();
            }
 
-           var_dump($settype);
            switch ($settype) {
 
                 case SabreAMF_AMF3_Const::DT_UNDEFINED  : return null; 
