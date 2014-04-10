@@ -29,6 +29,9 @@ Bugfixes, suggestions, improvements:
 * [Karl von Randow][4]
 * [Renaun Erickson][5]
 * [Asbjørn Sloth Tønnesen][6]
+* [Matt Humphrey][7]
+
+[See all contributors](https://github.com/evert/SabreAMF/graphs/contributors)
 
 Drupal integration:
 * Ionut Stoica
@@ -45,3 +48,4 @@ Thanks to:
 [4]: http://xk72.com/blog
 [5]: http://renaun.com/blog
 [6]: http://lila.io
+[7]: http://m4tt.io
