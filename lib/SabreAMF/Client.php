@@ -66,6 +66,13 @@
         private $encoding = SabreAMF_Const::AMF0;
 
         /**
+         * HTTP headers
+         *
+         * @var array
+         */
+        private $httpHeaders = array();
+
+        /**
          * __construct 
          * 
          * @param string $endPoint The url to the AMF gateway
@@ -78,6 +85,19 @@
             $this->amfRequest = new SabreAMF_Message();
             $this->amfOutputStream = new SabreAMF_OutputStream();
 
+        }
+
+        /**
+         * Add a HTTP header to the cURL request
+         *
+         * @param string $header
+         * @return $this
+         */
+        public function addHTTPHeader($header)
+        {
+            $this->httpHeaders[] = $header;
+
+            return $this;
         }
 
 
@@ -120,12 +140,16 @@
 
             $this->amfRequest->serialize($this->amfOutputStream);
 
+            $headers = array_merge(array(
+                'Content-type: ' . SabreAMF_Const::MIMETYPE
+            ), $this->httpHeaders);
+
             // The curl request
             $ch = curl_init($this->endPoint);
             curl_setopt($ch,CURLOPT_POST,1);
             curl_setopt($ch,CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch,CURLOPT_TIMEOUT,20);
-            curl_setopt($ch,CURLOPT_HTTPHEADER,array('Content-type: ' . SabreAMF_Const::MIMETYPE));
+            curl_setopt($ch,CURLOPT_HTTPHEADER,$headers);
             curl_setopt($ch,CURLOPT_POSTFIELDS,$this->amfOutputStream->getRawData());
     		if ($this->httpProxy) {
     			curl_setopt($ch,CURLOPT_PROXY,$this->httpProxy);
