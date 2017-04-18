@@ -162,7 +162,17 @@
                     if ($rObject instanceof SabreAMF_Externalized) {
                         $rObject->readExternal($this->readAMFData());
                     } elseif ($rObject instanceof SabreAMF_TypedObject) {
-                        $rObject->setAMFData(array('externalizedData'=>$this->readAMFData()));
+                        if($rObject->getAMFClassName() == "DSK"){
+                            $data = $this->readDSK()->getAMFData();
+                            $rObject = $data;
+                        }
+                        elseif($rObject->getAMFClassName() == "DSA"){
+                            $data = $this->readDSA()->getAMFData();
+                            $rObject = $data;
+                        }
+                        else{
+                            $rObject->setAMFData(array('externalizedData'=>$this->readAMFData()));
+                        }
                     } else {
                         $rObject->externalizedData = $this->readAMFData();
                     }
@@ -391,8 +401,147 @@
             $this->storedObjects[] = $dateTime;
             return $dateTime;
         }
- 
+        
+         /**
+         * readDSA
+         * 
+         * @return mixed
+         */
 
+        public function readDSA() {
+            $obj = new SabreAMF_TypedObject("DSA", "");
+            $vars = array();
+            
+            $flags = $this->readFlags();
+            foreach($flags as $key => $flag){
+                $bits = 0;
+                if($key == 0){
+                    if (($flag & 0x01) != 0){
+                        $vars["body"] = $this->readAMFData();
+                    }
+                    if (($flag & 0x02) != 0){
+                        $vars["clientId"] = $this->readAMFData();
+                    }
+                    if (($flag & 0x04) != 0){
+                        $vars["destination"] = $this->readAMFData();
+                    }
+                    if (($flag & 0x08) != 0){
+                        $vars["headers"] = $this->readAMFData();
+                    }
+                    if (($flag & 0x10) != 0){
+                        $vars["messageId"] = $this->readAMFData();
+                    }
+                    if (($flag & 0x20) != 0){
+                        $vars["timeStamp"] = $this->readAMFData();
+                    }
+                    if (($flag & 0x40) != 0){
+                        $vars["timeToLive"] = $this->readAMFData();
+                    }
+                    $bits = 7;
+                }
+                elseif($key == 1){
+                    if (($flag & 0x01) != 0){
+                        $this->stream->readByte();
+                        $temp = $this->readByteArray()->getData();
+                        $vars["clientIdBytes"] = $temp;
+                        $vars["clientId"] = $this->byteArrayToID($temp);
+                    }
+                    if (($flag & 0x02) != 0){
+                        $this->stream->readByte();
+                        $temp = $this->readByteArray()->getData();
+                        $vars["messageIdBytes"] = $temp;
+                        $vars["messageId"] = $this->byteArrayToID($temp);
+                    } 
+                    $bits = 2;
+                }
+                $vars[] = $this->readRemaining($flag, $bits);
+            }
+            
+            $flags = $this->readFlags();
+            foreach($flags as $key => $flag){
+                $bits = 0;
+                if($key == 0){
+                    if (($flag & 0x01) != 0){
+                        $vars["correlationId"] = $this->readAMFData();
+                    }
+                    if (($flag & 0x02) != 0){
+                        $this->stream->readByte();
+                        $temp = $this->readByteArray();
+                        $vars["correlationIdBytes"] = $temp;
+                        $vars["correlationId"] = $this->byteArrayToID($temp);
+                    }
+                    $bits = 2;
+                }
+                $vars[] = $this->readRemaining($flag, $bits);
+            }
+            $obj->setAMFData($vars);
+            return $obj;
+        }
+ 
+        /**
+         * readDSK
+         * 
+         * @return mixed
+         */
+
+        public function readDSK() {
+            $ret = $this->readDSA();
+            $ret->setAMFClassName("DSK");
+            
+            $data = $ret->getAMFData();
+            
+            $flags = $this->readFlags();
+            foreach($flags as $flag){
+                $data[] = $this->readRemaining($flag, 0);
+            }
+            
+            return $ret;
+        }
+        
+        /**
+         * readFlags
+         * 
+         * @return array
+         */
+        private function readFlags(){
+            $flags = array();
+            
+            do {
+                $flag = $this->stream->readByte();
+                $flags[] = $flag;
+            }while(($flag & 0x80) != 0);
+            
+            return $flags;
+        }
+
+        /**
+         * byteArrayToID
+         * 
+         * @return array
+         */
+        private function byteArrayToID($ba){
+            $str = "";
+            for($i=0; $i<strlen($ba);$i++){
+                $int = ord($ba[$i]);
+                if($i == 4 || $i == 6 || $i == 8 || $i == 10){
+                    $str .= "-";
+                }
+                $str .= dechex($int);
+            }
+            return $str;
+        }
+        
+        private function readRemaining($flag, $bits){
+            $data = "";
+            if(($flag >> $bits) != 0){
+                for($i = $bits; $i < 6; $i++){
+                    if((($flag >> $i) & 1) != 0){
+                        $this->readAMFData();
+                    }
+                }
+            }
+            return $data;
+        }
     }
 
 
