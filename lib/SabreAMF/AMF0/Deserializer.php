@@ -1,238 +1,263 @@
 <?php
 
     /**
-     * SabreAMF_AMF0_Deserializer 
+     * SabreAMF_Message 
      * 
-     * @package SabreAMF
-     * @subpackage AMF0
+     * The Message class encapsulates either an entire request package or an entire result package; including an AMF enveloppe
+     * 
+     * @package SabreAMF 
      * @version $Id$
      * @copyright Copyright (C) 2006-2009 Rooftop Solutions. All rights reserved.
      * @author Evert Pot (http://www.rooftopsolutions.nl/) 
-     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause) 
-     * @uses SabreAMF_Const
-     * @uses SabreAMF_AMF0_Const
-     * @uses SabreAMF_AMF3_Deserializer
-     * @uses SabreAMF_AMF3_Wrapper
-     * @uses SabreAMF_TypedObject
+     * @licence http://www.freebsd.org/copyright/license.html  BSD License (4 Clause)
+     * @uses SabreAMF_AMF0_Serializer
+     * @uses SabreAMF_AMF0_Deserializer
      */
-    class SabreAMF_AMF0_Deserializer extends SabreAMF_Deserializer {
+    class SabreAMF_Message {
 
         /**
-         * refList 
-         * 
-         * @var array 
+         * clientType
+         *
+         * @var int
          */
-        private $refList = array();
+        private $clientType=0;
+        /**
+         * bodies 
+         * 
+         * @var array
+         */
+        private $bodies=array();
+        /**
+         * headers 
+         * 
+         * @var array
+         */
+        private $headers=array();
 
         /**
-         * amf3Deserializer 
+         * encoding 
          * 
-         * @var SabreAMF_AMF3_Deserializer 
+         * @var int 
          */
-        private $amf3Deserializer = null;
+        private $encoding = SabreAMF_Const::AMF0;
 
         /**
-         * readAMFData 
+         * serialize 
          * 
-         * @param int $settype 
-         * @param bool $newscope
-         * @return mixed 
-         */
-        public function readAMFData($settype = null,$newscope = false) {
-
-           if ($newscope) $this->refList = array();
-
-           if (is_null($settype)) {
-                $settype = $this->stream->readByte();
-           }
-
-           switch ($settype) {
-
-                case SabreAMF_AMF0_Const::DT_NUMBER      : return $this->stream->readDouble();
-                case SabreAMF_AMF0_Const::DT_BOOL        : return $this->stream->readByte()==true;
-                case SabreAMF_AMF0_Const::DT_STRING      : return $this->readString();
-                case SabreAMF_AMF0_Const::DT_OBJECT      : return $this->readObject();
-                case SabreAMF_AMF0_Const::DT_NULL        : return null; 
-                case SabreAMF_AMF0_Const::DT_UNDEFINED   : return null;
-                case SabreAMF_AMF0_Const::DT_REFERENCE   : return $this->readReference();
-                case SabreAMF_AMF0_Const::DT_MIXEDARRAY  : return $this->readMixedArray();
-                case SabreAMF_AMF0_Const::DT_ARRAY       : return $this->readArray();
-                case SabreAMF_AMF0_Const::DT_DATE        : return $this->readDate();
-                case SabreAMF_AMF0_Const::DT_LONGSTRING  : return $this->readLongString();
-                case SabreAMF_AMF0_Const::DT_UNSUPPORTED : return null;
-                case SabreAMF_AMF0_Const::DT_XML         : return $this->readLongString();
-                case SabreAMF_AMF0_Const::DT_TYPEDOBJECT : return $this->readTypedObject();
-                case SabreAMF_AMF0_Const::DT_AMF3        : return $this->readAMF3Data();
-                default                   :  throw new Exception('Unsupported type: 0x' . strtoupper(str_pad(dechex($settype),2,0,STR_PAD_LEFT))); return false;
- 
-           }
-
-        }
-
-        /**
-         * readObject 
+         * This method serializes a request. It requires an SabreAMF_OutputStream as an argument to read
+         * the AMF Data from. After serialization the Outputstream will contain the encoded AMF data.
          * 
-         * @return object 
+         * @param SabreAMF_OutputStream $stream 
+         * @return void
          */
-        public function readObject() {
+        public function serialize(SabreAMF_OutputStream $stream) {
 
-            $object = array();
-            $this->refList[] =& $object;
-            while (true) {
-                $key = $this->readString();
-                $vartype = $this->stream->readByte();
-                if ($vartype==SabreAMF_AMF0_Const::DT_OBJECTTERM) break;
-                $object[$key] = $this->readAmfData($vartype);
-            }
-            if (defined('SABREAMF_OBJECT_AS_ARRAY')) {
-                $object = (object)$object;
-            }
-            return $object;    
-
-        }
-
-        /**
-         * readReference 
-         * 
-         * @return object 
-         */
-        public function readReference() {
+            $this->outputStream = $stream;
+            $stream->writeByte(0x00);
+            $stream->writeByte($this->encoding);
+            $stream->writeInt(count($this->headers));
             
-            $refId = $this->stream->readInt();
-            if (isset($this->refList[$refId])) {
-                return $this->refList[$refId];
-            } else {
-                throw new Exception('Invalid reference offset: ' . $refId);
-                return false;
+            foreach($this->headers as $header) {
+
+                $serializer = new SabreAMF_AMF0_Serializer($stream);
+                $serializer->writeString($header['name']);
+                $stream->writeByte($header['required']==true);
+                $stream->writeLong(-1);
+                $serializer->writeAMFData($header['data']);
+            }
+
+            $stream->writeInt(count($this->bodies));
+
+
+            foreach($this->bodies as $body) {
+                $serializer = new SabreAMF_AMF0_Serializer($stream);
+                $serializer->writeString($body['target']);
+                $serializer->writeString($body['response']);
+                $stream->writeLong(-1);
+                
+                switch($this->encoding) {
+
+                    case SabreAMF_Const::AMF0 :
+                        $serializer->writeAMFData($body['data']);
+                        break;
+                    case SabreAMF_Const::AMF3 :
+                        $serializer->writeAMFData(new SabreAMF_AMF3_Wrapper($body['data']));
+                        break;
+
+                }
+
             }
 
         }
 
-
         /**
-         * readArray 
+         * deserialize 
          * 
-         * @return array 
+         * This method deserializes a request. It requires an SabreAMF_InputStream with valid AMF data. After
+         * deserialization the contents of the request can be found through the getBodies and getHeaders methods
+         *
+         * @param SabreAMF_InputStream $stream 
+         * @return void
          */
-        public function readArray() {
+        public function deserialize(SabreAMF_InputStream $stream) {
 
-            $length = $this->stream->readLong();
-            $arr = array();
-            $this->refList[]&=$arr;
-            while($length--) $arr[] = $this->readAMFData();
-            return $arr;
+            $this->headers = array();
+            $this->bodies = array();
+
+            $this->InputStream = $stream;
+
+            $stream->readByte();
+          
+            $this->clientType = $stream->readByte();
+
+            $deserializer = new SabreAMF_AMF0_Deserializer($stream);
+
+            $totalHeaders = $stream->readInt();
+
+            for($i=0;$i<$totalHeaders;$i++) {
+
+                $header = array(
+                    'name'     => $deserializer->readString(),
+                    'required' => $stream->readByte()==true
+                );
+                $stream->readLong();
+                $header['data']  = $deserializer->readAMFData(null,true);
+                $this->headers[] = $header;    
+
+            }
+ 
+            $totalBodies = $stream->readInt();
+
+            for($i=0;$i<$totalBodies;$i++) {
+
+                try {
+                    $target = $deserializer->readString();
+                } catch (Exception $e) {
+                    // Could not fetch next body.. this happens with some versions of AMFPHP where the body
+                    // count isn't properly set. If this happens we simply stop decoding
+                    //var_dump($e);
+                    break;
+                }
+
+                $body = array(
+                    'target'   => $target,
+                    'response' => $deserializer->readString(),
+                    'length'   => $stream->readLong(),
+                    'data'     => $deserializer->readAMFData(null,true)
+                );
+         
+                if (is_object($body['data']) && $body['data'] instanceof SabreAMF_AMF3_Wrapper) {
+                     $body['data'] = $body['data']->getData();
+                     $this->encoding = SabreAMF_Const::AMF3;
+                } else if (is_array($body['data'])) {
+                    $i = 0;
+                    while($i < count($body['data'])) {
+                        if($body['data'][$i] instanceof SabreAMF_AMF3_Wrapper) {
+                            $body['data'][$i] = $body['data'][$i]->getData();
+                        }
+                        $i++;
+                    }
+                     
+                     $this->encoding = SabreAMF_Const::AMF3;
+                }
+
+                $this->bodies[] = $body;    
+
+            }
+
 
         }
 
         /**
-         * readMixedArray 
+         * getClientType 
          * 
-         * @return array 
-         */
-        public function readMixedArray() {
-
-            $highestIndex = $this->stream->readLong();
-            return $this->readObject();
-
-        }
-
-       /**
-         * readString 
-         * 
-         * @return string 
-         */
-        public function readString() {
-
-            $strLen = $this->stream->readInt();
-            return $this->stream->readBuffer($strLen);
-
-        }
-
-        /**
-         * readLongString 
-         * 
-         * @return string 
-         */
-        public function readLongString() {
-
-            $strLen = $this->stream->readLong();
-            return $this->stream->readBuffer($strLen);
-
-        }
-
-        /**
-         *  
-         * readDate 
+         * Returns the ClientType for the request. Check SabreAMF_Const for possible (known) values
          * 
          * @return int 
          */
-        public function readDate() {
+        public function getClientType() {
 
-            // Unix timestamp in seconds. We strip the millisecond part
-            $timestamp = floor($this->stream->readDouble() / 1000);
-
-            // we are ignoring the timezone
-            $timezoneOffset = $this->stream->readInt();
-            //if ($timezoneOffset > 720) $timezoneOffset = ((65536 - $timezoneOffset));
-            //$timezoneOffset=($timezoneOffset * 60) - date('Z');
-
-            $dateTime = new DateTime('@' . $timestamp);
-            
-            return $dateTime;
+            return $this->clientType;
 
         }
 
         /**
-         * readTypedObject 
+         * getBodies 
          * 
-         * @return object
+         * Returns the bodies int the message
+         * 
+         * @return array 
          */
-        public function readTypedObject() {
+        public function getBodies() {
 
-            $classname = $this->readString();
-
-            $isMapped = false;
-
-            if ($localClassname = $this->getLocalClassName($classname)) {
-                $rObject = new $localClassname();
-                $isMapped = true;
-            } else {
-                $rObject = new SabreAMF_TypedObject($classname,null);
-            }
-            $this->refList[] =& $rObject;
-
-            $props = array();
-            while (true) {
-                $key = $this->readString();
-                $vartype = $this->stream->readByte();
-                if ($vartype==SabreAMF_AMF0_Const::DT_OBJECTTERM) break;
-                $props[$key] = $this->readAmfData($vartype);
-            }
-
-            if ($isMapped) {
-                foreach($props as $k=>$v) 
-                    $rObject->$k = $v;
-            } else {
-                $rObject->setAMFData($props);
-            }
-
-            return $rObject;
+            return $this->bodies;
 
         }
-        
+
         /**
-         * readAMF3Data 
+         * getHeaders 
          * 
-         * @return SabreAMF_AMF3_Wrapper 
+         * Returns the headers in the message
+         * 
+         * @return array 
          */
-        public function readAMF3Data() {
+        public function getHeaders() {
 
-            $amf3Deserializer = new SabreAMF_AMF3_Deserializer($this->stream);
-            return new SabreAMF_AMF3_Wrapper($amf3Deserializer->readAMFData());
+            return $this->headers;
 
         }
 
+        /**
+         * addBody 
+         *
+         * Adds a body to the message
+         * 
+         * @param mixed $body 
+         * @return void 
+         */
+        public function addBody($body) {
 
-   }
+            $this->bodies[] = $body;
+
+        }
+
+        /**
+         * addHeader 
+         * 
+         * Adds a message header
+         * 
+         * @param mixed $header 
+         * @return void
+         */
+        public function addHeader($header) {
+
+            $this->headers[] = $header;
+
+        }
+
+        /**
+         * setEncoding 
+         * 
+         * @param int $encoding 
+         * @return void
+         */
+        public function setEncoding($encoding) {
+
+            $this->encoding = $encoding;
+
+        }
+
+        /**
+         * getEncoding 
+         * 
+         * @return int 
+         */
+        public function getEncoding() {
+
+            return $this->encoding; 
+
+        }
+
+    }
 
 
