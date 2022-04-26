@@ -26,14 +26,22 @@
         protected $stream;
 
         /**
+         * savedRefrences
+         * 
+         * @var array
+         */
+        protected $savedRefrences;
+
+        /**
          * __construct 
          *
          * @param SabreAMF_InputStream $stream 
          * @return void
          */
-        public function __construct(SabreAMF_InputStream $stream) {
+        public function __construct(SabreAMF_InputStream $stream, $savedRefs = array()) {
 
             $this->stream = $stream;
+            $this->savedRefrences = $savedRefs;
 
         }
 

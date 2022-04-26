@@ -135,6 +135,7 @@
                 } catch (Exception $e) {
                     // Could not fetch next body.. this happens with some versions of AMFPHP where the body
                     // count isn't properly set. If this happens we simply stop decoding
+                    //var_dump($e);
                     break;
                 }
 
@@ -148,14 +149,14 @@
                 if (is_object($body['data']) && $body['data'] instanceof SabreAMF_AMF3_Wrapper) {
                      $body['data'] = $body['data']->getData();
                      $this->encoding = SabreAMF_Const::AMF3;
-                } else if (is_array($body['data']) && isset($body['data'][0]) && is_object($body['data'][0]) && $body['data'][0] instanceof SabreAMF_AMF3_Wrapper) {
-
-                     if ( defined('SABREAMF_AMF3_PRESERVE_ARGUMENTS') ) {
-                        $body['data'][0] = $body['data'][0]->getData();
-                     } else {
-                        $body['data'] = $body['data'][0]->getData();
-
-                     }
+                } else if (is_array($body['data'])) {
+                    $i = 0;
+                    while($i < count($body['data'])) {
+                        if($body['data'][$i] instanceof SabreAMF_AMF3_Wrapper) {
+                            $body['data'][$i] = $body['data'][$i]->getData();
+                        }
+                        $i++;
+                    }
                      
                      $this->encoding = SabreAMF_Const::AMF3;
                 }
