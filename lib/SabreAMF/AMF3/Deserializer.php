@@ -46,12 +46,36 @@
         private $storedClasses = array();
 
         /**
+         * refsLoaded
+         * 
+         * @var bool
+         */
+        private $refsLoaded = false;
+
+        /**
+         * getreferences
+         * 
+         * @return array
+         */
+        public function getReferences() {
+            return array($this->storedStrings, $this->storedObjects, $this->storedClasses);
+        }
+
+        /**
          * readAMFData 
          * 
          * @param mixed $settype 
          * @return mixed 
          */
         public function readAMFData($settype = null) {
+
+           if ($this->refsLoaded == false && empty($this->savedreferences) == false) {
+                $this->storedStrings = $this->savedreferences[0];
+                $this->storedObjects = $this->savedreferences[1];
+                $this->storedClasses = $this->savedreferences[2];
+
+                $this->refsLoaded = true;
+           }
 
            if (is_null($settype)) {
                 $settype = $this->stream->readByte();

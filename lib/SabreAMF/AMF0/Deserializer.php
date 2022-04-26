@@ -25,6 +25,14 @@
         private $refList = array();
 
         /**
+         * savedreferences
+         * 
+         * @var array
+         */
+
+        private $savedRefs = array();
+
+        /**
          * amf3Deserializer 
          * 
          * @var SabreAMF_AMF3_Deserializer 
@@ -227,8 +235,10 @@
          */
         public function readAMF3Data() {
 
-            $amf3Deserializer = new SabreAMF_AMF3_Deserializer($this->stream);
-            return new SabreAMF_AMF3_Wrapper($amf3Deserializer->readAMFData());
+            $amf3Deserializer = new SabreAMF_AMF3_Deserializer($this->stream, $this->savedRefs);
+            $data = $amf3Deserializer->readAMFData();
+            $this->savedRefs = $amf3Deserializer->getReferences();
+            return new SabreAMF_AMF3_Wrapper($data);
 
         }
 
