@@ -150,15 +150,19 @@
                      $body['data'] = $body['data']->getData();
                      $this->encoding = SabreAMF_Const::AMF3;
                 } else if (is_array($body['data'])) {
-                    $i = 0;
-                    while($i < count($body['data'])) {
-                        if($body['data'][$i] instanceof SabreAMF_AMF3_Wrapper) {
-                            $body['data'][$i] = $body['data'][$i]->getData();
+                    if (!defined("SABREAMF_AMF3_PRESERVE_ARGUMENTS")) {
+                        $body['data'] = $body['data'][0]->getData();
+                    } else {
+                        $i = 0;
+                        while($i < count($body['data'])) {
+                            if($body['data'][$i] instanceof SabreAMF_AMF3_Wrapper) {
+                                $body['data'][$i] = $body['data'][$i]->getData();
+                            }
+                            $i++;
                         }
-                        $i++;
                     }
                      
-                     $this->encoding = SabreAMF_Const::AMF3;
+                    $this->encoding = SabreAMF_Const::AMF3;
                 }
 
                 $this->bodies[] = $body;    
