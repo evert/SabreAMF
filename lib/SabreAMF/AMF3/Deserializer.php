@@ -262,7 +262,7 @@
             $arrId = $arrId >> 1;
             
             $data = array();
-            $this->storedObjects[] &= $data;
+            $this->storedObjects[]=&$data;
 
             $key = $this->readString();
 
